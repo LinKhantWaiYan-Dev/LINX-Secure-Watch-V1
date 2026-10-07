@@ -659,7 +659,10 @@ function renderLogin(msg){
     }else{
       const fails=(info.fails||0)+1, until=fails>=MAX_ATTEMPTS?Date.now()+LOCK_MIN*6e4:0;
       store.set("lock",{fails:until?0:fails,until});
-      const log=store.get("audit",[]); log.unshift({at:new Date().toISOString(),by:u||"(blank)",role:"-",action:"Failed sign-in attempt",incidentId:""}); store.set("audit",log.slice(0,300));
+      /* Failed attempts are logged locally and in the shared Audit Log sheet */
+      const log=store.get("audit",[]), entries=[{at:new Date().toISOString(),by:u||"(blank)",role:"-",action:"Failed sign-in attempt",incidentId:""}];
+      if(until) entries.push({at:new Date().toISOString(),by:u||"(blank)",role:"-",action:`Sign-in locked for ${LOCK_MIN} minutes after ${MAX_ATTEMPTS} failed attempts`,incidentId:""});
+      entries.forEach(en=>{ log.unshift(en); apiQuiet("audit",{entry:en},"Could not write to the audit log."); }); store.set("audit",log.slice(0,300));
       renderLogin(until?"":`Username or password is incorrect. ${MAX_ATTEMPTS-fails} attempt${MAX_ATTEMPTS-fails===1?"":"s"} left before sign-in is locked for ${LOCK_MIN} minutes.`);
     }
   });
@@ -850,7 +853,7 @@ function renderMine(){
 }
 
 /* ---------- Case panel ---------- */
-function openCase(id){
+function openCase(id,quiet){
   const i=incidents().find(x=>x.id===id); if(!i) return;
   const role=state.user.role;
   document.querySelectorAll(".modal-back").forEach(m=>m.remove());
@@ -880,7 +883,7 @@ function openCase(id){
     <div class="row" style="justify-content:flex-end"><button class="btn" id="closeM">Close</button></div></div>`;
   document.body.appendChild(back);
   const close=()=>{ back.remove(); rerender(); };
-  const done=(msg)=>{ toast(msg); back.remove(); rerender(); openCase(id); };
+  const done=(msg)=>{ toast(msg); back.remove(); rerender(); openCase(id,true); };
   $("#closeM",back).onclick=close;
   back.onclick=e=>{ if(e.target===back) close(); };
   back.addEventListener("keydown",e=>{ if(e.key==="Escape") close(); });
@@ -900,6 +903,7 @@ function openCase(id){
     $("#delNo",back).onclick=()=>$("#delZone",back).innerHTML="";
     $("#delYes",back).onclick=()=>{ saveIncidents(incidents().filter(x=>x.id!==i.id),"delete"); apiQuiet("delete",{id:i.id},"Could not delete the case in the Google Sheet."); audit("Deleted record",i.id); toast(i.id+" deleted."); close(); };
   });
+  if(!quiet) audit("Viewed case",id);
   $("#closeM",back).focus();
 }
 
@@ -1063,6 +1067,17 @@ function renderDashboard(){
 }
 
 /* ---------- LIN: System admin (backup, restore, audit) ---------- */
+const auditItems=log=>log.slice(0,150).map(a=>`<li><span class="mono">${a.at?fmt(a.at):""}</span> · <b>${esc(a.by)}</b> ${a.role&&a.role!=="-"?`<span class="muted">(${esc(ROLE_LABEL[a.role]||a.role)})</span>`:""} · ${esc(a.action)} ${a.incidentId?`<span class="mono">${esc(a.incidentId)}</span>`:""}</li>`).join("")||"<li class='muted'>Nothing recorded yet.</li>";
+/* In shared mode the audit log comes from the Audit Log sheet, so it covers every device */
+async function loadSharedAudit(){
+  try{
+    const url=sheetUrl()+(sheetUrl().includes("?")?"&":"?")+"key="+encodeURIComponent(sheetKey())+"&action=audit&t="+Date.now();
+    const body=await (await fetch(url)).json();
+    if(!body.ok||!Array.isArray(body.audit)) throw 0;
+    const list=$("#auditList"), cnt=$("#auditCount"); if(!list) return;
+    list.innerHTML=auditItems(body.audit); cnt.textContent=`All devices · latest ${body.audit.length}`;
+  }catch(e){ const cnt=$("#auditCount"); if(cnt) cnt.textContent=store.get("audit",[]).length+" entries on this device"; }
+}
 function renderSystem(){
   const log=store.get("audit",[]), backups=store.get("backups",[]), gf=store.get("googleFormUrl","");
   $("#main").innerHTML=`<div class="grid2b">
@@ -1085,8 +1100,9 @@ function renderSystem(){
     <p class="muted small" style="margin-top:0">${shared()?"Load example incidents into the shared Google Sheet so the charts have something to show. Remove them before real use.":"Example incidents help you demonstrate the charts."}</p>
     <div class="row"><button class="btn" id="resetSample">${shared()?"Load example incidents into the sheet":"Reload example incidents"}</button><button class="btn danger" id="clearSample">Remove example incidents</button></div>
   </section>
-  <section class="panel" id="auditPanel"><div class="panel-head"><div><div class="eyebrow">Accountability</div><h2>Audit log</h2></div><span class="muted small">${log.length} entries</span></div>
-    <ul class="audit">${log.slice(0,150).map(a=>`<li><span class="mono">${fmt(a.at)}</span> · <b>${esc(a.by)}</b> ${a.role!=="-"?`<span class="muted">(${esc(ROLE_LABEL[a.role]||a.role)})</span>`:""} · ${esc(a.action)} ${a.incidentId?`<span class="mono">${esc(a.incidentId)}</span>`:""}</li>`).join("")||"<li class='muted'>Nothing recorded yet.</li>"}</ul></section></div>`;
+  <section class="panel" id="auditPanel"><div class="panel-head"><div><div class="eyebrow">Accountability</div><h2>Audit log</h2></div><span class="muted small" id="auditCount">${shared()?"All devices · loading…":log.length+" entries"}</span></div>
+    <ul class="audit" id="auditList">${auditItems(log)}</ul></section></div>`;
+  if(shared()) loadSharedAudit();
   const snap=()=>{ const b=store.get("backups",[]); b.unshift({at:new Date().toISOString(),by:state.user.name,data:incidents()}); store.set("backups",b.slice(0,7)); audit("Took backup snapshot"); };
   $("#bkNow").onclick=()=>{snap();toast("Snapshot saved.");renderSystem();bindOpenButtons();};
   $("#bkFile").onclick=()=>{ const json=JSON.stringify({exportedAt:new Date().toISOString(),incidents:incidents()},null,2);
