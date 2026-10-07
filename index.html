@@ -1,0 +1,1151 @@
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#1f2126">
+<meta name="apple-mobile-web-app-title" content="LINX">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="application-name" content="LINX Secure Watch">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<meta name="format-detection" content="telephone=no">
+<title>LINX Secure Watch</title>
+<meta name="description" content="Security incident reporting and case management for Grandview Hotel, Singapore.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:wght@400;500;600;700;800;900&display=swap">
+<style>
+/* Layout: a charcoal command bar carrying the red LINX mark, then one working pane per role. Red is the brand; severity colours carry the warnings. */
+:root{
+  --bg:#f3f3f4; --surface:#ffffff; --surface-2:#f7f7f8; --ink:#1c1d21; --ink-2:#50535b; --ink-3:#80838c;
+  --line:#dcdde1; --accent:#25272d; --accent-ink:#ffffff; --brand:#d0102b; --brand-soft:#fde8ea; --focus:#2563eb;
+  --bar:#1f2126; --bar-ink:#ffffff; --bar-ink-2:#b4b7bf; --bar-line:#33363d;
+  --sev-low:#2f7d4f; --sev-low-bg:#e3f2e8; --sev-med:#946410; --sev-med-bg:#fbf0d7;
+  --sev-high:#c2531a; --sev-high-bg:#fde7da; --sev-crit:#b3121f; --sev-crit-bg:#fbe0e1;
+  --st-open:#b3121f; --st-assigned:#1d5fbf; --st-review:#946410; --st-resolved:#2f7d4f;
+  --chart-1:#3b4250; --chart-grid:#e6e7ea;
+  --shadow:0 1px 2px rgba(20,20,25,.06),0 4px 14px rgba(20,20,25,.05);
+  --f-body:"Public Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#121316; --surface:#1b1d21; --surface-2:#22252a; --ink:#ececef; --ink-2:#a7aab2; --ink-3:#7b7e87;
+  --line:#30333a; --accent:#ececef; --accent-ink:#121316; --brand:#e8213c; --brand-soft:#3a1a1f; --focus:#7aa7ff;
+  --bar:#0c0d0f; --bar-ink:#ffffff; --bar-ink-2:#9fa3ab; --bar-line:#24262b;
+  --sev-low:#6ccf93; --sev-low-bg:#163327; --sev-med:#e6b450; --sev-med-bg:#3a2e14;
+  --sev-high:#f08c55; --sev-high-bg:#3d2316; --sev-crit:#ff6b73; --sev-crit-bg:#45191d;
+  --st-open:#ff6b73; --st-assigned:#7aa7ff; --st-review:#e6b450; --st-resolved:#6ccf93;
+  --chart-1:#c9ccd3; --chart-grid:#2a2d33; --shadow:none; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121316; --surface:#1b1d21; --surface-2:#22252a; --ink:#ececef; --ink-2:#a7aab2; --ink-3:#7b7e87;
+  --line:#30333a; --accent:#ececef; --accent-ink:#121316; --brand:#e8213c; --brand-soft:#3a1a1f; --focus:#7aa7ff;
+  --bar:#0c0d0f; --bar-ink:#ffffff; --bar-ink-2:#9fa3ab; --bar-line:#24262b;
+  --sev-low:#6ccf93; --sev-low-bg:#163327; --sev-med:#e6b450; --sev-med-bg:#3a2e14;
+  --sev-high:#f08c55; --sev-high-bg:#3d2316; --sev-crit:#ff6b73; --sev-crit-bg:#45191d;
+  --st-open:#ff6b73; --st-assigned:#7aa7ff; --st-review:#e6b450; --st-resolved:#6ccf93;
+  --chart-1:#c9ccd3; --chart-grid:#2a2d33; --shadow:none; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{min-height:100%}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{-webkit-tap-highlight-color:transparent}
+button,a,select,input,label,summary{touch-action:manipulation}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;margin:0}
+h1,h2,h3{text-wrap:balance;margin:0;line-height:1.2}
+h2{font-size:1.25rem;font-weight:800}
+h3{font-size:1rem;font-weight:700}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.muted{color:var(--ink-2)}
+.small{font-size:.85rem}
+.eyebrow{font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--ink-3)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.4rem;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:.5rem .9rem;font-weight:600;cursor:pointer}
+.btn:hover{border-color:var(--ink-3)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.primary:hover{opacity:.9}
+.btn.red{background:var(--brand);color:#fff;border-color:var(--brand)}
+.btn.danger{color:var(--sev-crit);border-color:var(--sev-crit)}
+.btn.sm{padding:.3rem .6rem;font-size:.85rem}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+label{font-weight:600;font-size:.9rem;display:block;margin-bottom:.3rem}
+.req{color:var(--sev-crit)}
+input[type=text],input[type=password],input[type=search],input[type=datetime-local],input[type=date],input[type=url],select,textarea{
+  width:100%;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:.55rem .7rem;min-height:2.6rem}
+textarea{min-height:6rem;resize:vertical}
+.hint{font-size:.82rem;color:var(--ink-2);margin-top:.25rem}
+.err{font-size:.82rem;color:var(--sev-crit);margin-top:.25rem;font-weight:600}
+.field.invalid input,.field.invalid select,.field.invalid textarea{border-color:var(--sev-crit)}
+
+/* LINX mark */
+.logo{display:flex;align-items:center;gap:.6rem}
+.mark{display:block;width:2.4rem;height:2.4rem;border-radius:8px;flex:none}
+.logo-name{font-weight:800;font-size:1.05rem;line-height:1.1;letter-spacing:.01em}
+.logo-sub{font-size:.75rem;opacity:.75}
+
+/* Login */
+.login-wrap{min-height:100vh;min-height:100dvh;display:grid;place-items:center;padding-block:2rem;padding-inline:16px}
+.login{width:100%;max-width:430px;background:var(--surface);border:1px solid var(--line);border-top:5px solid var(--brand);border-radius:14px;padding:2rem;box-shadow:var(--shadow);display:grid;gap:1.1rem}
+.login .mark{width:3.2rem;height:3.2rem;border-radius:10px}
+.login .logo-name{font-size:1.35rem}
+.demo{background:var(--surface-2);border:1px dashed var(--line);border-radius:8px;padding:.75rem;font-size:.82rem}
+.demo table{width:100%;border-collapse:collapse}
+.demo td{padding:.15rem .3rem;overflow-wrap:anywhere}
+@media (max-width:420px){.demo table,.demo tbody,.demo tr{display:block}.demo tr{display:grid;grid-template-columns:auto 1fr;column-gap:.5rem;padding:.35rem 0;border-top:1px solid var(--line)}.demo tr:first-child{border-top:0}.demo td:first-child{grid-column:1/-1;font-weight:700}}
+
+/* Shell */
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bar);color:var(--bar-ink);border-bottom:1px solid var(--bar-line)}
+.topbar-in{max-width:1240px;margin:0 auto;padding-block:.6rem;padding-inline:16px;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.topbar .btn{background:transparent;color:var(--bar-ink);border-color:var(--bar-line)}
+.spacer{flex:1}
+.live{display:inline-flex;align-items:center;gap:.4rem;font-size:.8rem;color:var(--bar-ink-2)}
+.dot{width:8px;height:8px;border-radius:50%;background:#3fbf73;animation:pulse 2.4s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(63,191,115,.5)}70%{box-shadow:0 0 0 7px rgba(63,191,115,0)}100%{box-shadow:0 0 0 0 rgba(63,191,115,0)}}
+@media (prefers-reduced-motion: reduce){.dot{animation:none}}
+.user-chip{display:flex;align-items:center;gap:.5rem;font-size:.85rem}
+.role{font-size:.7rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:.15rem .45rem;border-radius:5px;background:var(--brand);color:#fff}
+.tabs{max-width:1240px;margin:0 auto;padding-inline:16px;display:flex;gap:.25rem;overflow-x:auto}
+.tab{border:0;background:none;padding:.65rem .9rem;font-weight:600;color:var(--bar-ink-2);border-bottom:3px solid transparent;cursor:pointer;white-space:nowrap}
+.tab:hover{color:var(--bar-ink)}
+.tab[aria-selected=true]{color:var(--bar-ink);border-bottom-color:var(--brand)}
+.tab .count{font-size:.72rem;background:var(--brand);color:#fff;border-radius:10px;padding:0 .4rem;margin-left:.35rem}
+
+main{max-width:1240px;margin:0 auto;padding-block:1.25rem 3rem;padding-inline:16px;display:grid;grid-template-columns:minmax(0,1fr);gap:1.25rem}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:1.25rem;min-width:0}
+.panel-head{display:flex;align-items:baseline;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1rem}
+
+/* Role guide */
+.guide-card{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--brand);border-radius:var(--r);padding:1.1rem 1.25rem;display:grid;gap:.75rem}
+.guide-card .who{display:flex;gap:.6rem;align-items:center;flex-wrap:wrap}
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.75rem;margin:0;padding:0;list-style:none;counter-reset:s}
+.steps li{counter-increment:s;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:.7rem .8rem;font-size:.86rem}
+.steps li::before{content:counter(s);display:inline-grid;place-items:center;width:1.4rem;height:1.4rem;border-radius:50%;background:var(--accent);color:var(--accent-ink);font-weight:800;font-size:.75rem;margin-right:.4rem}
+@media (max-width:900px){.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.steps{grid-template-columns:1fr}}
+.flow{display:flex;flex-wrap:wrap;gap:.35rem;align-items:center;font-size:.8rem}
+.flow .arrow{color:var(--ink-3)}
+.cant{font-size:.82rem;color:var(--ink-2)}
+
+/* Task queue */
+.qhead{display:flex;align-items:center;gap:.6rem;justify-content:space-between;flex-wrap:wrap;margin-bottom:.6rem}
+.qnum{font-weight:800;font-size:.75rem;background:var(--brand);color:#fff;border-radius:999px;padding:.05rem .5rem}
+.qnum.zero{background:var(--surface-2);color:var(--ink-3);border:1px solid var(--line)}
+.qitem{display:grid;grid-template-columns:auto auto minmax(0,1fr) auto;gap:.75rem;align-items:center;padding:.6rem .75rem;border:1px solid var(--line);border-radius:8px;background:var(--surface-2)}
+.qitem+.qitem{margin-top:.5rem}
+.qitem .desc{min-width:0}
+.qitem .note{font-size:.82rem;color:var(--ink-2);margin-top:.15rem}
+@media (max-width:640px){.qitem{grid-template-columns:auto minmax(0,1fr)}.qitem .desc{grid-column:1/-1}.qitem .btn{grid-column:1/-1}}
+.empty{font-size:.88rem;color:var(--ink-2);padding:.5rem 0;margin:0}
+
+/* Alert banner */
+.alert{border:1px solid var(--sev-crit);background:var(--sev-crit-bg);border-radius:var(--r);padding:1rem 1.25rem;display:grid;gap:.6rem}
+.alert-head{display:flex;gap:.6rem;align-items:center;font-weight:800;color:var(--sev-crit)}
+.alert-item{display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;background:var(--surface);border-radius:8px;padding:.55rem .75rem;border:1px solid var(--line)}
+.alert-item .desc{flex:1;min-width:200px}
+
+/* Severity + status */
+.sev{display:inline-flex;align-items:center;gap:.35rem;font-size:.75rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:.15rem .5rem;border-radius:999px;white-space:nowrap}
+.sev::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.sev.low{color:var(--sev-low);background:var(--sev-low-bg)}
+.sev.medium{color:var(--sev-med);background:var(--sev-med-bg)}
+.sev.high{color:var(--sev-high);background:var(--sev-high-bg)}
+.sev.critical{color:var(--sev-crit);background:var(--sev-crit-bg)}
+.status{font-size:.78rem;font-weight:700;padding:.1rem .45rem;border-radius:5px;border:1px solid currentColor;white-space:nowrap}
+.status.s-open{color:var(--st-open)} .status.s-assigned{color:var(--st-assigned)} .status.s-review{color:var(--st-review)} .status.s-resolved{color:var(--st-resolved)}
+
+/* KPI */
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:1rem 1.1rem;display:grid;gap:.2rem}
+.kpi .v{font-size:2rem;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.1}
+.kpi.crit{border-left:4px solid var(--sev-crit)}
+.kpi .d{font-size:.8rem;color:var(--ink-2)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:1.25rem;align-items:start}
+.grid2b{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.25rem;align-items:start}
+@media (max-width:900px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.grid2,.grid2b{grid-template-columns:1fr}}
+
+/* Charts */
+.chart svg{width:100%;height:auto;display:block}
+.chart text{fill:var(--ink-2);font-family:var(--f-body);font-size:11px}
+.bars{display:grid;gap:.5rem}
+.bar-row{display:grid;grid-template-columns:minmax(0,11rem) minmax(0,1fr) 2.5rem;gap:.6rem;align-items:center;font-size:.85rem}
+.bar-row .lbl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar-track{height:12px;background:var(--surface-2);border-radius:6px;overflow:hidden;border:1px solid var(--line)}
+.bar-fill{height:100%;background:var(--chart-1);border-radius:6px}
+.bar-row .n{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.sevbar{display:flex;height:28px;border-radius:6px;overflow:hidden;border:1px solid var(--line)}
+.sevbar div{display:grid;place-items:center;font-size:.75rem;font-weight:700;color:#fff;min-width:0}
+.legend{display:flex;gap:1rem;flex-wrap:wrap;font-size:.8rem;margin-top:.6rem}
+.legend span{display:inline-flex;align-items:center;gap:.35rem}
+.legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+
+/* Patterns */
+.patterns{display:grid;gap:.6rem}
+.pattern{display:grid;grid-template-columns:auto minmax(0,1fr);gap:.75rem;align-items:start;padding:.75rem;border-radius:8px;background:var(--surface-2);border:1px solid var(--line)}
+.pattern .tag{font-size:.7rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--brand);padding-top:.15rem;min-width:5.5rem}
+
+/* Filters + table */
+.filters{display:grid;grid-template-columns:minmax(0,2fr) repeat(5,minmax(0,1fr));gap:.6rem;align-items:end;margin-bottom:1rem}
+@media (max-width:1000px){.filters{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:480px){.filters{grid-template-columns:1fr}}
+.filters label{font-size:.75rem;color:var(--ink-2);margin-bottom:.15rem}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+table.data{width:100%;border-collapse:collapse;font-size:.88rem;min-width:860px}
+table.data th{text-align:left;background:var(--surface-2);font-size:.75rem;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2);padding:.6rem .7rem;border-bottom:1px solid var(--line);white-space:nowrap}
+table.data th button{all:unset;cursor:pointer}
+table.data th button:focus-visible{outline:2px solid var(--focus)}
+table.data td{padding:.6rem .7rem;border-bottom:1px solid var(--line);vertical-align:top}
+table.data tr:last-child td{border-bottom:0}
+table.data tr.is-crit td:first-child{box-shadow:inset 4px 0 0 var(--sev-crit)}
+table.data td.desc{max-width:300px}
+table.data td.mono{white-space:nowrap}
+.table-foot{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-top:.75rem;font-size:.85rem;color:var(--ink-2)}
+
+/* Form */
+.form-layout{max-width:880px;margin:0 auto;width:100%}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+.form-grid .full{grid-column:1/-1}
+.form-grid>*,.filters>*,.row>*{min-width:0}
+input,select,textarea{max-width:100%;min-width:0}
+input[type=datetime-local],input[type=date]{display:block}
+@media (max-width:560px){.form-grid{grid-template-columns:1fr}}
+.autofill{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.75rem;background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:.75rem;font-size:.85rem}
+@media (max-width:560px){.autofill{grid-template-columns:1fr}}
+.autofill b{display:block;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+.sev-pick{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.5rem}
+@media (max-width:560px){.sev-pick{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.sev-pick input{position:absolute;opacity:0;pointer-events:none}
+.sev-pick label{margin:0;border:2px solid var(--line);border-radius:8px;padding:.55rem;text-align:center;cursor:pointer;font-size:.85rem;background:var(--surface)}
+.sev-pick input:focus-visible+label{outline:3px solid var(--focus)}
+.sev-pick input:checked+label.low{border-color:var(--sev-low);background:var(--sev-low-bg);color:var(--sev-low)}
+.sev-pick input:checked+label.medium{border-color:var(--sev-med);background:var(--sev-med-bg);color:var(--sev-med)}
+.sev-pick input:checked+label.high{border-color:var(--sev-high);background:var(--sev-high-bg);color:var(--sev-high)}
+.sev-pick input:checked+label.critical{border-color:var(--sev-crit);background:var(--sev-crit-bg);color:var(--sev-crit)}
+.guide{display:grid;gap:.6rem;font-size:.88rem}
+.guide dl{margin:0;display:grid;gap:.5rem}
+.guide dt{font-weight:700}
+.guide dd{margin:0;color:var(--ink-2)}
+.radio-row{display:flex;gap:1rem;flex-wrap:wrap}
+.radio-row label{font-weight:500;display:flex;gap:.4rem;align-items:center;margin:0}
+.confirm{border:1px solid var(--sev-low);background:var(--sev-low-bg);border-radius:var(--r);padding:1.25rem;display:grid;gap:.5rem}
+
+/* Toast + modal */
+.toasts{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));display:grid;gap:.5rem;z-index:70;max-width:min(360px,calc(100vw - 32px))}
+.toast{background:var(--bar);color:#fff;padding:.75rem 1rem;border-radius:8px;font-size:.88rem;box-shadow:var(--shadow);border-left:4px solid var(--brand)}
+.toast.crit{background:var(--sev-crit);border-left-color:#fff}
+.modal-back{position:fixed;inset:0;background:rgba(10,10,14,.55);display:grid;place-items:center;z-index:60;padding:16px}
+.modal{background:var(--surface);border-radius:12px;max-width:760px;width:100%;padding:1.25rem;display:grid;grid-template-columns:minmax(0,1fr);gap:1rem;max-height:92vh;max-height:92dvh;overflow:auto;overscroll-behavior:contain}
+.modal>*{min-width:0}
+.kv dd{overflow-wrap:anywhere}
+.modal pre{background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:.75rem;max-height:300px;overflow:auto;font-size:.78rem;white-space:pre}
+.kv{display:grid;grid-template-columns:9rem minmax(0,1fr);gap:.35rem .75rem;font-size:.9rem;margin:0}
+.kv dt{color:var(--ink-2)}
+.kv dd{margin:0}
+.row{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+.action-box{border:1px solid var(--line);border-radius:10px;padding:1rem;display:grid;gap:.7rem;background:var(--surface-2)}
+.action-box h3{display:flex;gap:.5rem;align-items:center}
+.instr{border-left:4px solid var(--st-assigned);background:var(--surface);padding:.6rem .8rem;border-radius:6px;font-size:.9rem}
+.instr.fix{border-left-color:var(--st-review)}
+.timeline{list-style:none;margin:0;padding:0;display:grid;gap:.5rem;font-size:.86rem}
+.timeline li{display:grid;grid-template-columns:7.5rem minmax(0,1fr);gap:.6rem;padding-bottom:.5rem;border-bottom:1px solid var(--line)}
+.timeline li:last-child{border-bottom:0}
+.sample-note{font-size:.8rem;background:var(--surface-2);border:1px dashed var(--line);border-radius:8px;padding:.5rem .75rem;color:var(--ink-2)}
+.audit li{font-size:.85rem;padding:.35rem 0;border-bottom:1px solid var(--line)}
+.audit{list-style:none;margin:0;padding:0;max-height:320px;overflow:auto}
+.theme-switch{display:inline-flex;border:1px solid var(--bar-line);border-radius:8px;overflow:hidden}
+.theme-switch button{border:0;background:transparent;color:var(--bar-ink-2);padding:.3rem .55rem;font-size:.78rem;font-weight:600;cursor:pointer}
+.theme-switch button[aria-pressed=true]{background:var(--brand);color:#fff}
+.login .theme-switch{border-color:var(--line);justify-self:end}
+.login .theme-switch button{color:var(--ink-2)}
+.login .theme-switch button[aria-pressed=true]{color:#fff}
+.dot.off{background:#e8213c;animation:none}
+.conn{border:1px solid var(--line);border-radius:8px;padding:.6rem .8rem;font-size:.85rem;background:var(--surface-2)}
+.conn.ok{border-color:var(--sev-low)} .conn.bad{border-color:var(--sev-crit)}
+
+/* ---------- Account menu (phones) and tab icons ---------- */
+.mob-only{display:none}
+.tab svg{display:none}
+.tab .t-short{display:none}
+.acct{position:relative;display:none;align-items:center;gap:.5rem}
+.acct-btn{display:inline-flex;align-items:center;gap:.4rem;min-height:44px;background:transparent;border:1px solid var(--bar-line);color:var(--bar-ink);border-radius:999px;padding:.3rem .7rem .3rem .35rem;font-weight:700;cursor:pointer}
+.acct-btn .av{width:28px;height:28px;border-radius:50%;background:var(--brand);color:#fff;display:grid;place-items:center;font-size:.8rem;font-weight:800}
+.acct-panel{position:absolute;right:0;top:calc(100% + 8px);width:min(300px,calc(100vw - 32px));background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.25);padding:1rem;display:grid;gap:.8rem;z-index:40}
+.acct-panel .theme-switch{border-color:var(--line);justify-self:start}
+.acct-panel .theme-switch button{color:var(--ink-2)}
+.acct-panel .theme-switch button[aria-pressed=true]{color:#fff}
+.acct-panel .live{color:var(--ink-2)}
+.topbar .acct-panel .btn{background:var(--surface);color:var(--ink);border-color:var(--line)}
+.lt-time{white-space:nowrap}
+.more-btn{margin-top:.6rem;width:100%}
+.sort-row{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
+.filter-box{margin-bottom:1rem}
+.filter-box>summary{cursor:pointer;font-weight:700;padding:.6rem .8rem;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);list-style:none;display:flex;align-items:center;gap:.5rem;min-height:44px}
+.filter-box>summary::-webkit-details-marker{display:none}
+.filter-box>summary::after{content:"▾";margin-left:auto;color:var(--ink-3)}
+.filter-box[open]>summary{margin-bottom:.8rem}
+.filter-box[open]>summary::after{content:"▴"}
+.action-box>*{min-width:0}
+.action-box textarea,.action-box select{max-width:100%}
+
+@media (max-width:1150px){ .lt-time{display:none} }
+@media (max-height:500px) and (orientation:landscape){ .topbar{position:static} .logo-sub{display:none} }
+
+/* Phones and folded foldables: one slim header row + bottom tab bar */
+@media (max-width:760px){
+  .desk-only{display:none!important}
+  .acct{display:flex}
+  .topbar-in{flex-wrap:nowrap;gap:.6rem;padding-block:.5rem}
+  .logo-sub{display:none}
+  .logo-name{font-size:1rem}
+  .tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;max-width:none;margin:0;padding:0 env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px);
+    background:var(--bar);border-top:1px solid var(--bar-line);display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:0;overflow:visible}
+  .tab{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:58px;padding:6px 2px;font-size:.7rem;line-height:1.1;border-bottom:0;border-top:3px solid transparent;white-space:normal;text-align:center}
+  .tab[aria-selected=true]{border-top-color:var(--brand);border-bottom-color:transparent}
+  .tab svg{display:block;width:22px;height:22px}
+  .tab .t-long{display:none}
+  .tab .t-short{display:inline}
+  .tab .count{position:absolute;top:4px;left:calc(50% + 6px);margin:0;font-size:.65rem;padding:0 .35rem}
+  main{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+  .toasts{bottom:calc(72px + env(safe-area-inset-bottom,0px))}
+  .modal-back{padding:0;align-items:end}
+  .modal{border-radius:16px 16px 0 0;max-height:94vh;max-height:94dvh;padding:1rem 1rem calc(1rem + env(safe-area-inset-bottom,0px))}
+  .panel{padding:1rem}
+  .guide-card{padding:1rem}
+  .kpi .v{font-size:1.6rem}
+  .bar-row{grid-template-columns:minmax(0,7.5rem) minmax(0,1fr) 2rem}
+  .action-box .row .btn{flex:1 1 auto;min-width:0}
+  .action-box .row>label{flex:0 0 auto}
+  .action-box .row>select{flex:1 1 8rem}
+  /* Tables become cards so nothing needs sideways scrolling */
+  .tablewrap.cards-wrap{overflow:visible;border:0}
+  table.data.cards{min-width:0}
+  table.data.cards thead{display:none}
+  table.data.cards,table.data.cards tbody,table.data.cards tr,table.data.cards td{display:block;width:100%}
+  table.data.cards tr{border:1px solid var(--line);border-radius:10px;padding:.6rem .75rem;margin-bottom:.6rem;background:var(--surface)}
+  table.data.cards tr.is-crit{border-left:4px solid var(--sev-crit)}
+  table.data.cards tr.is-crit td:first-child{box-shadow:none}
+  table.data.cards td{border:0;padding:.2rem 0;display:flex;gap:.6rem;align-items:baseline;max-width:none}
+  table.data.cards td::before{content:attr(data-label);flex:0 0 6.2rem;color:var(--ink-3);font-size:.72rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+  table.data.cards td:empty{display:none}
+}
+@media (max-width:480px){
+  .kv{grid-template-columns:1fr;gap:.1rem}
+  .kv dd{margin-bottom:.45rem}
+  .timeline li{grid-template-columns:1fr;gap:.1rem}
+  .kpis{gap:.6rem}
+  .kpi{padding:.8rem}
+}
+@media (max-width:330px){
+  .kpis{grid-template-columns:1fr}
+  .logo-name{display:none}
+  table.data.cards td{flex-direction:column;gap:0}
+  table.data.cards td::before{flex:none}
+}
+
+/* Touch screens: bigger tap targets, and 16px inputs so iPhones don't zoom in */
+@media (pointer:coarse),(max-width:760px){
+  input[type=text],input[type=password],input[type=search],input[type=datetime-local],input[type=date],input[type=url],select,textarea{font-size:16px}
+  .btn,.btn.sm{min-height:44px}
+  .theme-switch button{min-height:40px;min-width:48px}
+  .tab{min-height:48px}
+  .radio-row label{min-height:44px}
+  .sev-pick label{min-height:44px;display:grid;place-items:center}
+  table.data th button{padding:.4rem 0}
+}
+
+/* Notches and rounded corners in landscape */
+.topbar-in,main{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+</style>
+
+<div id="app"></div>
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script>
+/* =========================================================================
+   LINX Secure Watch — security incident reporting & case management
+   Prototype web app for Grandview Hotel (Singapore).
+   Part 1: incident report form (hotel staff)
+   Part 2: incident database with role-based access, search, backup
+   Part 3: management dashboard, pattern detection and critical alerts
+   Case flow: Staff reports → LIN (IT Security Officer) acknowledges, handles
+              and resolves → Ravi (Security Manager) monitors the dashboard
+   Author: Lin Khant Wai Yan
+   ========================================================================= */
+"use strict";
+
+/* ===================== SETTINGS: paste your two values here =====================
+   Leave both empty to run as a demo that saves data in this browser only.
+   Fill both in to share one Google Sheet database between everyone (see GO-LIVE-GUIDE). */
+const CONFIG = {
+  SHEET_URL: "https://script.google.com/macros/s/AKfycbyQLsNMG6e1aJWftofL6Z1-KHEwKzlV9utzUBgo5zBz_LJoaB6d_PphbStC6LzkO9-C/exec",   // Apps Script web app link. It ends with /exec
+  SHEET_KEY: "d7450d375ad54f159040",   // access key shown in the Apps Script execution log
+  SHOW_DEMO_LOGINS: false   // true = show the demo usernames and passwords on the sign-in page
+};
+/* =============================================================================== */
+
+/* ---------- SHA-256 (pure JS, so login works offline and on file://) ---------- */
+function sha256(ascii){
+  function rr(v,a){return (v>>>a)|(v<<(32-a))}
+  const mp=Math.pow, max=mp(2,32); let result="", words=[], len;
+  const hash=[], k=[]; let pc=0; const isC={};
+  for(let c=2;pc<64;c++){ if(!isC[c]){ for(let i=0;i<313;i+=c) isC[i]=c;
+      hash[pc]=(mp(c,.5)*max)|0; k[pc++]=(mp(c,1/3)*max)|0; } }
+  const h=hash.slice(0,8);
+  ascii=unescape(encodeURIComponent(ascii)); len=ascii.length*8;
+  ascii+="\x80"; while(ascii.length%64-56) ascii+="\x00";
+  for(let i=0;i<ascii.length;i++){ const j=ascii.charCodeAt(i); words[i>>2]|=j<<((3-i)%4)*8; }
+  words[words.length]=((len/max)|0); words[words.length]=(len);
+  for(let j=0;j<words.length;){
+    const w=words.slice(j,j+=16); const old=h.slice(0);
+    let hh=h.slice(0);
+    for(let i=0;i<64;i++){
+      const w15=w[i-15], w2=w[i-2], a=hh[0], e=hh[4];
+      const t1=hh[7]+(rr(e,6)^rr(e,11)^rr(e,25))+((e&hh[5])^((~e)&hh[6]))+k[i]+
+        (w[i]=(i<16)?w[i]:(w[i-16]+(rr(w15,7)^rr(w15,18)^(w15>>>3))+w[i-7]+(rr(w2,17)^rr(w2,19)^(w2>>>10)))|0);
+      const t2=(rr(a,2)^rr(a,13)^rr(a,22))+((a&hh[1])^(a&hh[2])^(hh[1]&hh[2]));
+      hh=[(t1+t2)|0].concat(hh); hh[4]=(hh[4]+t1)|0; hh.pop();
+    }
+    for(let i=0;i<8;i++) h[i]=(hh[i]+old[i])|0;
+  }
+  for(let i=0;i<8;i++) for(let j=3;j+1;j--){ const b=(h[i]>>(j*8))&255; result+=((b<16)?0:"")+b.toString(16); }
+  return result;
+}
+
+/* ---------- Reference data ---------- */
+const DEPARTMENTS=["Front Office","Reservations","Housekeeping","Food & Beverage","Finance","IT","Sales & Marketing","Security"];
+const INCIDENT_TYPES=[
+  {id:"T01",name:"Unauthorised access attempt",def:"high"},
+  {id:"T02",name:"Repeated failed logins",def:"medium"},
+  {id:"T03",name:"Unusual database query",def:"high"},
+  {id:"T04",name:"Phishing or suspicious email",def:"medium"},
+  {id:"T05",name:"Guest data sent to wrong person",def:"high"},
+  {id:"T06",name:"Lost or stolen device",def:"high"},
+  {id:"T07",name:"Suspicious software or pop-up",def:"medium"},
+  {id:"T08",name:"Unattended or unlocked terminal",def:"low"},
+  {id:"T09",name:"Payment card handling concern",def:"high"},
+  {id:"T10",name:"Other security concern",def:"low"}
+];
+const SEVERITIES=["low","medium","high","critical"];
+const SEV_RANK={low:1,medium:2,high:3,critical:4};
+const SYSTEMS=["Property management system (PMS)","Guest Wi-Fi portal","Point-of-sale terminal","Email (Outlook)","Booking engine","Key card encoder","Back-office PC","Staff mobile device","Physical area / paper records"];
+const STATUSES=["Open","In progress","Resolved"];
+const STATUS_CLASS={"Open":"s-open","In progress":"s-assigned","Resolved":"s-resolved"};
+const STATUS_HELP={"Open":"Reported, not started yet","In progress":"Being handled by IT security","Resolved":"Closed"};
+/* Records saved before the workflow change are read in the current format */
+const OLD_STATUS={"Assigned to IT":"In progress","Awaiting review":"In progress"};
+const OLD_IDS={"GV-0008":"LINX - 0001","GV-0217":"LINX - 0002","GV-1042":"LINX - 0003","GV-1110":"LINX - 0004","GV-1288":"LINX - 0005","GV-1301":"LINX - 0006","GV-1420":"LINX - 0007","GV-1533":"LINX - 0008","GV-1602":"LINX - 0009","GV-1750":"LINX - 0010"};
+const PDPA=["Not assessed","Not notifiable","Notifiable: tell PDPC within 3 days","PDPC notified"];
+
+/* Demo accounts. Only salted SHA-256 hashes are stored, never plain passwords. */
+const USERS=[
+  {username:"nicolas", hash:"c144a06ea031f9de1f1523a1239c65e073e2b6fec2046b48e49db3d99b2ac25c", empId:"LINX - 0003", name:"Nicolas", dept:"Front Office", role:"staff", email:"nicolas@grandview.example"},
+  {username:"ravi", hash:"b6771975e4089dba74128ddc756dda80c41be5ada6de33e3de8454148f59bb90", empId:"LINX - 0002", name:"Ravi", dept:"Security", role:"manager", email:"ravi@grandview.example"},
+  {username:"lin", hash:"bd3cf9d0ba3271b6cad20e04c2cef7e48a516cb6e06cf9dd66badba8cffcd7aa", empId:"LINX - 0001", name:"LIN", dept:"IT", role:"admin", email:"lin@grandview.example"}
+];
+const MANAGER=USERS[1], IT=USERS[2];
+const ROLE_LABEL={staff:"Hotel staff",manager:"Security manager",admin:"IT security officer"};
+const ROLE_TABS={
+  staff:["report","mine"],
+  manager:["dashboard","log"],
+  admin:["itcases","dashboard","log","report","system"]
+};
+const TAB_SHORT={report:"Report",mine:"My reports",tasks:"Tasks",itcases:"My cases",dashboard:"Dashboard",log:"All cases",system:"System"};
+const TAB_ICON={"report": "M12 5v14M5 12h14", "mine": "M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01", "tasks": "M9 11l3 3 8-8M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9", "itcases": "M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z", "dashboard": "M3 3v18h18M7 16v-4M12 16V8M17 16v-7", "log": "M4 5h16M4 12h16M4 19h16", "system": "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"};
+const TAB_LABEL={report:"Report incident",mine:"My reports",tasks:"My tasks",itcases:"My cases",dashboard:"Dashboard",log:"All cases",system:"System admin"};
+
+const SESSION_TIMEOUT_MIN=15, MAX_ATTEMPTS=5, LOCK_MIN=5, POLL_MS=5000;
+
+/* ---------- Storage (localStorage with in-memory fallback) ---------- */
+const mem={};
+const store={
+  get(k,d){ try{ const v=localStorage.getItem("lxsw:"+k); return v==null?(k in mem?mem[k]:d):JSON.parse(v);}catch(e){ return k in mem?mem[k]:d; } },
+  set(k,v){ mem[k]=v; try{ localStorage.setItem("lxsw:"+k,JSON.stringify(v)); }catch(e){} }
+};
+let channel=null; try{ channel=new BroadcastChannel("lxsw"); }catch(e){}
+
+/* ---------- Shared Google Sheet database ---------- */
+const sheetUrl=()=>CONFIG.SHEET_URL||store.get("sheetUrl","");
+const sheetKey=()=>CONFIG.SHEET_URL?CONFIG.SHEET_KEY:store.get("sheetKey","");
+const shared=()=>!!sheetUrl();
+const SYNC_MS=15000;
+let writeSeq=0, sync={ok:null,msg:"",at:null,first:true,busy:false};
+async function api(action,payload){
+  writeSeq++;
+  const res=await fetch(sheetUrl(),{method:"POST",body:JSON.stringify(Object.assign({key:sheetKey(),action},payload||{}))});
+  const body=await res.json();
+  if(!body.ok) throw new Error(body.error||"The Google Sheet refused the change.");
+  return body;
+}
+function apiQuiet(action,payload,failMsg){
+  if(!shared()) return;
+  api(action,payload).catch(e=>{ toast((failMsg||"Could not save to the Google Sheet.")+" "+e.message+" Your screen will refresh from the sheet.",true); pullShared(); });
+}
+async function pullShared(){
+  if(!shared()||sync.busy) return;
+  sync.busy=true; const seq=writeSeq;
+  try{
+    const url=sheetUrl()+(sheetUrl().includes("?")?"&":"?")+"key="+encodeURIComponent(sheetKey())+"&t="+Date.now();
+    const body=await (await fetch(url)).json();
+    if(!body.ok) throw new Error(body.error||"The sheet refused the request.");
+    if(seq===writeSeq){ store.set("incidents",body.incidents||[]); }
+    sync.ok=true; sync.at=new Date(); sync.msg=`Connected to the Google Sheet. ${(body.incidents||[]).length} cases.`;
+  }catch(e){ sync.ok=false; sync.msg="Cannot reach the Google Sheet: "+e.message; }
+  finally{
+    sync.busy=false;
+    if(sync.first){ sync.first=false; if(state.user){ snapshotStatuses(); const ae=document.activeElement; if(!(ae&&/^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName))&&!document.querySelector(".modal-back")) rerender(); } }
+    else checkForUpdates();
+    paintLive();
+  }
+}
+function paintLive(){
+  const t=(shared()?(sync.at||state.lastSync):state.lastSync).toLocaleTimeString("en-SG",{hour12:false});
+  const html=shared()?(sync.ok===false?`Offline · cannot reach Google Sheet`:`Live · Google Sheet <span class="lt-time">· updated <span class="mono">${t}</span></span>`)
+    :`Live · this browser only <span class="lt-time">· updated <span class="mono">${t}</span></span>`;
+  document.querySelectorAll(".liveText").forEach(el=>el.innerHTML=html);
+  document.querySelectorAll(".liveDot").forEach(d=>d.classList.toggle("off",shared()&&sync.ok===false));
+  const g=$("#gsStatus"); if(g) g.textContent=shared()?(sync.msg||"Connecting…"):"Not connected. The app is using the data saved in this browser.";
+}
+
+/* ---------- Light / dark theme ---------- */
+function applyTheme(t){ if(t==="light"||t==="dark") document.documentElement.setAttribute("data-theme",t); else document.documentElement.removeAttribute("data-theme"); }
+function themeSwitch(){ const cur=store.get("theme","auto"); return `<div class="theme-switch" role="group" aria-label="Colour theme">${[["light","Light"],["dark","Dark"],["auto","Auto"]].map(([v,l])=>`<button type="button" data-theme-set="${v}" aria-pressed="${cur===v}">${l}</button>`).join("")}</div>`; }
+function bindTheme(){ document.querySelectorAll("[data-theme-set]").forEach(b=>b.onclick=()=>{ store.set("theme",b.dataset.themeSet); applyTheme(b.dataset.themeSet); document.querySelectorAll("[data-theme-set]").forEach(x=>x.setAttribute("aria-pressed",x.dataset.themeSet===b.dataset.themeSet)); }); }
+applyTheme(store.get("theme","auto"));
+
+/* ---------- Sample data (clearly marked as examples) ---------- */
+function seededRandom(seed){ return function(){ seed=(seed*1664525+1013904223)%4294967296; return seed/4294967296; }; }
+const SAMPLE_PEOPLE=[["LINX - 0003","Nicolas","Front Office"],["LINX - 0004","Ahmad Rahim","Front Office"],["LINX - 0005","Li Mei Chen","Reservations"],["LINX - 0006","Rajesh Kumar","Reservations"],["LINX - 0007","Siti Aminah","Housekeeping"],["LINX - 0008","Daniel Koh","Food & Beverage"],["LINX - 0009","Grace Wong","Finance"],["LINX - 0001","LIN","IT"],["LINX - 0010","Nurul Huda","Sales & Marketing"],["LINX - 0002","Ravi","Security"]];
+const SAMPLE_TEXT={
+  T01:["Someone tried to open the PMS admin screen using a manager's ID while the manager was on leave.","A person who said he was from IT asked to use the back-office PC at the front desk. He could not show a staff pass."],
+  T02:["PMS locked my account after several wrong passwords that I did not enter.","Seven failed login attempts on the reservations shared login between 2 am and 3 am."],
+  T03:["The reservations report export ran for the whole guest list, including passport fields, from an account that normally only runs daily arrivals.","Large number of guest profile lookups from one front desk login in ten minutes."],
+  T04:["Email claiming to be from a booking partner asked me to re-enter my login on a link that did not look right.","Invoice email with an attachment ending in .html from an unknown sender."],
+  T05:["A booking confirmation containing the guest's passport number was emailed to a different guest with a similar name.","Group rooming list with guest emails was sent to an outside travel agent by mistake."],
+  T06:["A staff tablet used for check-in is missing from the lobby counter after the night shift.","Housekeeping supervisor's phone with the work email app was lost on the MRT."],
+  T07:["Pop-up on the back-office PC asked to install a 'security update' from a site I did not recognise.","USB stick left at the concierge desk was plugged into a PC by a staff member."],
+  T08:["Front desk terminal left logged in with a guest profile open while the counter was empty.","Paper registration cards left on the printer in the back office overnight."],
+  T09:["A guest's full card number was written on a sticky note at the F&B cashier.","Card terminal at the pool bar has a loose cover that looks tampered with."],
+  T10:["Door to the server room was propped open with a chair.","Unknown person walking in the staff corridor without a pass."]
+};
+const SAMPLE_INSTR={T01:"Check the account's login history and disable it if it was misused.",T02:"Reset the password, check where the attempts came from and enable MFA.",T03:"Pull the database audit log and suspend the account until we know who ran the export.",T04:"Block the sender and the link, and check whether anyone entered a password.",T05:"Try to recall the email and confirm what data was sent.",T06:"Wipe the device remotely and remove its access tokens.",T07:"Isolate the PC and run a full malware scan.",T08:"Set screens to lock after 2 minutes on front desk PCs.",T09:"Check the terminal and remove any written card data.",T10:"Review CCTV and the door access log."};
+const SAMPLE_FIX={T01:"Account disabled, password reset, login history saved to the case file.",T02:"Password reset and MFA turned on. Attempts came from a guest Wi-Fi address, now blocked.",T03:"Account suspended. Audit log shows export from a shared login; shared login removed.",T04:"Sender and domain blocked in the mail filter. No one entered a password.",T05:"Recall partly worked. Recipient confirmed deletion in writing.",T06:"Device wiped remotely and removed from Microsoft 365.",T07:"PC scanned and cleaned, USB ports blocked by policy.",T08:"Screen lock policy pushed to all front desk PCs.",T09:"Terminal checked by vendor, note shredded, staff reminded.",T10:"Door access log reviewed, door alarm fixed."};
+function act(at,by,role,text){ return {at:new Date(at).toISOString(),by,role,text}; }
+function blankCase(){ return {acknowledgedBy:null,acknowledgedAt:null,assignedTo:null,assignedAt:null,instruction:"",fixNote:"",pdpa:"Not assessed",actions:[]}; }
+function makeSampleData(){
+  const rnd=seededRandom(20261007), now=Date.now(), out=[];
+  const weights=[["T02",7],["T04",8],["T08",6],["T01",5],["T03",4],["T05",4],["T07",4],["T06",3],["T09",3],["T10",4]];
+  const pool=[]; weights.forEach(([t,w])=>{for(let i=0;i<w;i++)pool.push(t)});
+  for(let i=0;i<48;i++){
+    const t=pool[Math.floor(rnd()*pool.length)], type=INCIDENT_TYPES.find(x=>x.id===t);
+    const p=SAMPLE_PEOPLE[Math.floor(rnd()*SAMPLE_PEOPLE.length)];
+    const daysAgo=Math.pow(rnd(),1.4)*30, hr=Math.floor(rnd()*24);
+    const occurred=new Date(now-daysAgo*864e5); occurred.setHours(hr,Math.floor(rnd()*60),0,0);
+    if(occurred.getTime()>now-36e5) occurred.setTime(now-36e5);
+    const reported=new Date(Math.min(now-6e5,occurred.getTime()+(10+rnd()*170)*6e4));
+    let sev=type.def; const r=rnd();
+    if(r>.86) sev=SEVERITIES[Math.min(3,SEV_RANK[sev])]; else if(r<.18) sev=SEVERITIES[Math.max(0,SEV_RANK[sev]-2)];
+    const guest=(t==="T05"||t==="T09"||t==="T03")?(rnd()>.35?"Yes":"Not sure"):(rnd()>.85?"Not sure":"No");
+    if(t==="T05"&&guest==="Yes"&&rnd()>.5) sev="critical";
+    const ageDays=(now-reported.getTime())/864e5, x=rnd();
+    const status=ageDays>10?(x>.1?"Resolved":"In progress"):(ageDays>3?(x>.4?"Resolved":"In progress"):(x>.5?"Open":"In progress"));
+    const rec=Object.assign({id:"",occurredAt:occurred.toISOString(),reportedAt:reported.toISOString(),typeId:t,severity:sev,
+      system:SYSTEMS[Math.floor(rnd()*SYSTEMS.length)],location:["Lobby front desk","Back office L1","Reservations office L2","Pool bar","Ballroom L3","Staff corridor B1","Concierge desk"][Math.floor(rnd()*7)],
+      description:SAMPLE_TEXT[t][Math.floor(rnd()*2)],guestData:guest,reporterId:p[0],reporterName:p[1],dept:p[2],status,sample:true},blankCase());
+    if(guest==="Yes"&&status==="Resolved") rec.pdpa="Not notifiable";
+    const rt=reported.getTime(); rec.actions.push(act(rt,p[1],p[0]===MANAGER.empId?"manager":p[0]===IT.empId?"admin":"staff","Reported the incident"));
+    if(status!=="Open"){
+      const ack=Math.min(now-4e5,rt+(.3+rnd()*2)*36e5); rec.acknowledgedBy=IT.name; rec.acknowledgedAt=new Date(ack).toISOString();
+      rec.assignedTo=IT.name; rec.assignedAt=rec.acknowledgedAt; rec.instruction=SAMPLE_INSTR[t];
+      rec.actions.push(act(ack,IT.name,"admin","Started work: "+SAMPLE_INSTR[t]));
+      if(status==="Resolved"){
+        const cl=Math.min(now-2e5,ack+(1+rnd()*20)*36e5); rec.fixNote=SAMPLE_FIX[t]; rec.fixedAt=rec.closedAt=new Date(cl).toISOString();
+        rec.actions.push(act(cl,IT.name,"admin","Resolved: "+SAMPLE_FIX[t]));
+      }
+    }
+    out.push(rec);
+  }
+  /* A clear recurring pattern for the demo: failed logins on reservations over the last 3 days */
+  for(let i=0;i<4;i++){
+    const d=new Date(now-(i*17+5)*36e5);
+    const rec=Object.assign({id:"",occurredAt:d.toISOString(),reportedAt:new Date(d.getTime()+20*6e4).toISOString(),typeId:"T02",severity:i===0?"high":"medium",
+      system:"Property management system (PMS)",location:"Reservations office L2",description:"PMS account locked after failed logins I did not make. Happened again this shift.",
+      guestData:"No",reporterId:"LINX - 0005",reporterName:"Li Mei Chen",dept:"Reservations",status:i<2?"Open":"In progress",sample:true},blankCase());
+    rec.actions.push(act(d.getTime()+20*6e4,"Li Mei Chen","staff","Reported the incident"));
+    if(i>=2){ rec.acknowledgedBy=IT.name; rec.acknowledgedAt=new Date(d.getTime()+2*36e5).toISOString(); rec.assignedTo=IT.name; rec.assignedAt=rec.acknowledgedAt; rec.instruction=SAMPLE_INSTR.T02; rec.actions.push(act(d.getTime()+2*36e5,IT.name,"admin","Started work: "+SAMPLE_INSTR.T02)); }
+    out.push(rec);
+  }
+  /* Two unacknowledged critical incidents so the alert panel has something to show */
+  const c1=new Date(now-2.5*36e5), c2=new Date(now-26*36e5);
+  [[c1,"T05","Email (Outlook)","Reservations office L2","Pre-arrival email with 46 guest names, emails and passport numbers was sent to an external address by mistake. Recall failed.","LINX - 0006","Rajesh Kumar","Reservations",12],
+   [c2,"T03","Property management system (PMS)","Back office L1","Overnight export of 3,100 guest profiles from a front desk login that was not in use at the time.","LINX - 0008","Daniel Koh","Food & Beverage",40]].forEach(([d,t,sys,loc,desc,eid,nm,dp,m])=>{
+    const rep=new Date(d.getTime()+m*6e4);
+    const rec=Object.assign({id:"",occurredAt:d.toISOString(),reportedAt:rep.toISOString(),typeId:t,severity:"critical",system:sys,location:loc,description:desc,guestData:"Yes",reporterId:eid,reporterName:nm,dept:dp,status:"Open",sample:true},blankCase());
+    rec.actions.push(act(rep,nm,"staff","Reported the incident")); out.push(rec);
+  });
+  out.sort((a,b)=>a.reportedAt.localeCompare(b.reportedAt));
+  out.forEach((x,i)=>x.id="INC-"+String(1001+i));
+  return out;
+}
+
+/* ---------- State ---------- */
+let state={
+  user:null, tab:null, knownStatus:new Map(), lastSync:new Date(),
+  filters:{q:"",type:"",dept:"",sev:"",status:"",from:"",to:""},
+  sort:{key:"reportedAt",dir:"desc"}, page:1, dashRange:"30", dashDept:""
+};
+function normalise(d){ let ch=false; d.forEach(i=>{ if(OLD_STATUS[i.status]){ i.status=OLD_STATUS[i.status]; ch=true; } if(OLD_IDS[i.reporterId]){ i.reporterId=OLD_IDS[i.reporterId]; ch=true; } }); return ch; }
+function incidents(){ let d=store.get("incidents",null); if(!d){ d=shared()?[]:makeSampleData(); store.set("incidents",d); } else if(normalise(d)) store.set("incidents",d); return d; }
+function saveIncidents(d,reason){ store.set("incidents",d); if(channel) try{channel.postMessage({t:"changed",reason})}catch(e){} }
+function snapshotStatuses(){ state.knownStatus=new Map(incidents().map(i=>[i.id,i.status])); }
+function audit(action,incidentId){
+  const log=store.get("audit",[]); log.unshift({at:new Date().toISOString(),by:state.user?state.user.name:"system",role:state.user?state.user.role:"-",action,incidentId:incidentId||""});
+  store.set("audit",log.slice(0,300));
+  apiQuiet("audit",{entry:log[0]},"Could not write to the audit log.");
+}
+function typeName(id){ const t=INCIDENT_TYPES.find(x=>x.id===id); return t?t.name:id; }
+/* Every case change goes through here, so it is saved, added to the case history and written to the audit log */
+function updateCase(id,fn,logText){
+  const d=incidents(), r=d.find(x=>x.id===id); if(!r) return null;
+  fn(r); r.actions=r.actions||[]; r.actions.push({at:new Date().toISOString(),by:state.user.name,role:state.user.role,text:logText});
+  saveIncidents(d,"case"); state.knownStatus.set(r.id,r.status);
+  apiQuiet("update",{incident:r},"Could not save this change to the Google Sheet.");
+  audit(logText.length>70?logText.slice(0,70)+"…":logText,id); return r;
+}
+
+/* ---------- Helpers ---------- */
+const $=(s,r=document)=>r.querySelector(s);
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmt=iso=>{ const d=new Date(iso); return d.toLocaleDateString("en-SG",{day:"2-digit",month:"short"})+" "+d.toLocaleTimeString("en-SG",{hour:"2-digit",minute:"2-digit",hour12:false}); };
+const fmtFull=iso=>{ const d=new Date(iso); return d.toLocaleDateString("en-SG",{day:"2-digit",month:"short",year:"numeric"})+", "+d.toLocaleTimeString("en-SG",{hour:"2-digit",minute:"2-digit",hour12:false}); };
+const ago=iso=>{ const h=(Date.now()-new Date(iso))/36e5; return h<1?Math.max(1,Math.round(h*60))+" min ago":h<48?Math.round(h)+" h ago":Math.round(h/24)+" days ago"; };
+const sevPill=s=>`<span class="sev ${s}">${s}</span>`;
+const statusPill=s=>`<span class="status ${STATUS_CLASS[s]||""}" title="${esc(STATUS_HELP[s]||"")}">${esc(s)}</span>`;
+function toast(msg,crit){ const t=document.createElement("div"); t.className="toast"+(crit?" crit":""); t.textContent=msg; $("#toasts").appendChild(t); setTimeout(()=>t.remove(),6000); }
+function localInputValue(d){ const p=n=>String(n).padStart(2,"0"); return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`; }
+const MARK_SRC="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHAAAABwCAMAAADxPgR5AAAASFBMVEX//////v7//f3//Pz/+/v/+vr/+fn629v1r6/ufHzmQEDeCQndBQXdBATdAwPcAwPdAgLcAgLdAQHdAADcAQHcAADbAADaAABHAJmsAAAJH0lEQVR42p1aiXbrqg6lnprYhkv3idP//9PHaCMhcPpYZyBmEBLSlkAoGwvsR6XqBtx0ReiB85OSuvJZru4frqta0TVOsZUDnBzORtzyDLEDmZESROYPN7P8SfDkp+JNiRzEPYI0dbU4kJGySNvTXGv4bLcqibGihF0AXzT+LlC0BirbJ2fxB+UESoUuJoNM8NLgQjrgei1xlOcGlwoqQavKAvCBudefUe4bmAKU/RQZmmRCtQS2YYlgIHFKtDDrarUK5zLOzapMIfw2VsADFGIMkIFCxPEPYhPZQwj2IgNTY/8oIkICm1xTtwpRy/NuS9HERXgOcWdUoFjb7YoG+uAUgaK2B77OKH6ce5s7GCtsKSTDZaqlrq3t2AGsiIucPUimwPRQ3aE7WSw6ngoVOIHiXBu8wUSFpnOwzAguETRlQbVUglx8pMX40HdCoT8xSv8EWQKtLRdhXwl7RNCQQN2FeYbYPbLW1ujN3bCSbUnAEnwQP4RfhrIOiN6C6hjEHYQQE90HAcl6M3nFEQ9NcBKBpkccKNA4IXtlFmhKGFzed7EAG5gQXLUXyfGzdF80mu4ZsqFIlswCthXGMEND4QpLjlE4SAFSmT8U3CGu8KcCYxJ7FlES0ERdgIaJuI/7UEeBzHOdXgUA9xZlIFxEZaAdIGEdpAidB809bVKyr+x5eL9EkyavjIgEHBT3kIMoIWSGBFPngc+a7IorgIA0HVFnJThRGjLjk6MEbMkywWb2UUkhbQm6EI6kqOEQ7LRA8ALE40vurII2cGwuJXyF9UJkiALdaqVpe4xeOCOE/OWxJgkWOUwUDs4Qj0RUnBwtQOJxUOQuLCUrjTFiCFYKRo7J0TsboohIYS+zAAk0Adz4HVOsGMVXrp8SaCU7NEbv2hfB2E1o0Lu3Pt9r3/VOpGv8UPcVMNq44n5dEt/DJ2OysLNIj1Qg+JiiLdXeMDkYhzH/0lerc8/DnEeuc7Apz4f7sT5i2Q7DQFkfz9j0fO1n1X3OUtevNPb5Xr/TLOt7j7Ps7zTi+7mbwvD396pCWbZ/hrnW/f2IbY9jy1VX11f7mr/tufl78+3w9NKXZX1pSnBc5mUZvzPBS6COoGublzEQDN2WRT3fe2IxjHXFtevjoVz7vDiKbtfg1zL7sfOyvjUYh/MwTioQpNrlOVyGYfYc+Oo4DMMYKSKPnUb3xbW/tthhCSJwLcs4jcM4D6tfXzCiiDSB4BgJcj2OBMc5idTRdgSnSNGEdk8wLEibY/t2K/cUn+8t/Bjj6jZrS6RJHI41QcLhljh0f6ZZrZHHRDAwBad93/6XJ/K7xeWFtZnyyM1FSpGDcziOgeQ0TVEXA8Egxbe2SYxuQeO0PhKzD0ePQVsU6XARRMXhUnLoiU5fS+Dx4tATzD+H8Wvy6/CS2bThx7XI4VBzaL2qBQ5LgoMXmu/tdO9fKVKvFt4Uotz9smY35UuT28RTaTJBSEpD9nBQXqxhskMXBPdwjjopjmHG9dAESwstpRyioTROWMsjSC0ufyu09BoxR3rDEja6iJdbewimNCXBUW2Bh8DWZi471OmsqF8Pb2WuzJFe4eKUzap97SH1uMnal5Lg+vv0laBK+4tzaH+2x9cctnl8FgwGlxUPM8QsWKQlcbj+ZAhwFH8LpYkMHtEghtA1YODFYmmHpdKAmsXICB77cVJ8rl+nSJHV1CvpEDcxM15h6SiZRYPDYzc6UZzUw2tI1NLkIZKxDsNXMgtbXH0xgv/t3qNH/+9qJnE4MoLa/GwZWJXXyGyHbqphDnaqsuEbXWVmLvDe37QcRosceth02BxE5wQagMF7IA9tHhemSZXQxkP9tIfewlh5ZhfBCdpIcR4imCcOs7uI4H16jt/9DMYJeDuZK1Ye74rgEAl67YgUw25F92T37CH8QIfjfjnzGNxvoTQ4CQ7ed3sf7f8NbpwTnDOHMRRyzijyGBx0En8wT62T3DzMOwiE5A/HrF1+VyKStDm0JuzY1zwkCHDtUUGnL6+al8L6kONlGMEpshTLHNmclykQDG1TIDj5ZucJo6Yj6Egc4Nrf65cbNi3Tksw9WOvkvriFGytFbUreQx61XR7AjZxz1991SNVnChP1j9vl9OlHF4GweW1PubipX2uqYs/VKKDAo36vuetrzeXIkZjT2vxtAzmQHm+5+Lg4tR04q2XgY86h1yTmPK7oq7WIvF2r2eXi5aBT/apeYYhbz9nX5I66CFP02VoEUWhmjOsDOW7v9Gz3Xlz1EtT5FGbqm5o/JhRhaZjYSE3h/+HiJmmjhKvf88qwcdL/jAyK6YrrLmV7idvbRDrOG8omRXbiVFWKAtY27/BtP2uAWhyg53Gyh4DlGUfTvC0K121AgxS7gG4mnet7eNNKV5v6kgW9S3YWCNfyArup/EgJ69s3frEj5S0EG0edZGFCkK9ypISSqlO+4KlWgi+AzAJsJRfUyTYrpGTbt+uoLlFRp/FOfRSyMsLlHsiFGbj+UwUQt9ZAUOsGloJd3tZp4LKKHsKgiRaq8xaHSuWDDCE+eIaj+F0kulh3SgG2A0BtAZR2CJpoaTzAKQiimWjqFXVdhZc19h/qm3q0E6lV0qGppZDS8v1cDb9oB9caftOviAdkyX7wRyQQ7qdJCgdXrorcJUPIcpcP3sTkf36CxiEScnaVpl3OGVX9LOm8hYcM6o13M3V+TUxcqdohoHxzQYUNltmRnzOJb9TQe6nQDxthiUKjztjWScQqM9MzWliBP6Kn6Lyn4iGaqlS8/WwOqB9xoUosNp9M5VCfpZQrj0LFJqhJM8/I6ZGojWZymCNG81EmhLQyMRGwF2g8QwomuRrrLHs7JKVrm+gP6algkhwK5pip1M9yINoUrvwUikdY7UcNNIsE2fFCjHzR9F2qc1ijRwNYlvfsO2aWxDx9gWq/qEKV9BTsCo2AGLUjbR1Iu887eq9NyDuNZrChKuAC0HytV1l9M7xvSlyJIyAHoxa2Y+S2/ivsrZIem9SvGmuVADohQOMEdB1IAXvzMAet52VoqFQrOa7kh1RoP7XEh4f9hn4rMYQCVb7PLknEQ2klXNV0RI0IV3y9RAOErjTahv/3Wxm0T9KXJ1OtPccf9kgWjRyt/A/pC9tpC/aqXwAAAABJRU5ErkJggg==";
+const logo=sub=>`<div class="logo"><img class="mark" src="${MARK_SRC}" alt="LINX" width="40" height="40"><div><div class="logo-name">Secure Watch</div><div class="logo-sub">${sub}</div></div></div>`;
+
+/* ---------- Authentication ---------- */
+function lockInfo(){ return store.get("lock",{fails:0,until:0}); }
+function renderLogin(msg){
+  const li=lockInfo(), locked=li.until>Date.now();
+  $("#app").innerHTML=`
+  <div class="login-wrap"><form class="login" id="loginForm" novalidate>
+    ${themeSwitch()}
+    ${logo("Security incident reporting · Grandview Hotel, Singapore")}
+    <div><h1 style="font-size:1.35rem">Sign in</h1><p class="muted small" style="margin:.3rem 0 0">Use your hotel staff account. You are signed out after ${SESSION_TIMEOUT_MIN} minutes without activity.</p></div>
+    <div class="field"><label for="lu">Username</label><input type="text" id="lu" autocomplete="username" required ${locked?"disabled":""}></div>
+    <div class="field"><label for="lp">Password</label><input type="password" id="lp" autocomplete="current-password" required ${locked?"disabled":""}></div>
+    ${msg?`<div class="err" role="alert">${esc(msg)}</div>`:""}
+    ${locked?`<div class="err" role="alert">Too many failed attempts. Sign-in is locked until ${new Date(li.until).toLocaleTimeString("en-SG",{hour:"2-digit",minute:"2-digit"})}. Contact IT security if you need help sooner.</div>`:""}
+    <button class="btn red" type="submit" ${locked?"disabled":""}>Sign in</button>
+    ${CONFIG.SHOW_DEMO_LOGINS?`<div class="demo"><div class="eyebrow" style="margin-bottom:.35rem">Demo accounts for assessment</div>
+      <table><tr><td>Hotel staff</td><td>Nicolas</td><td class="mono">nicolas</td><td class="mono">Staff@2026</td></tr>
+      <tr><td>Security manager</td><td>Ravi</td><td class="mono">ravi</td><td class="mono">Manager@2026</td></tr>
+      <tr><td>IT security officer</td><td>LIN</td><td class="mono">lin</td><td class="mono">Admin@2026</td></tr></table></div>`:`<p class="muted small" style="margin:0">Need access? Contact IT security.</p>`}
+  </form></div>`;
+  $("#loginForm").addEventListener("submit",e=>{
+    e.preventDefault();
+    const u=$("#lu").value.trim().toLowerCase(), p=$("#lp").value;
+    if(!u||!p){ renderLogin("Enter both your username and password."); return; }
+    const info=lockInfo(); if(info.until>Date.now()){ renderLogin(); return; }
+    const user=USERS.find(x=>x.username===u);
+    if(user && sha256("LINX-salt::"+u+"::"+p)===user.hash){
+      store.set("lock",{fails:0,until:0});
+      state.user=user; store.set("session",{username:u,last:Date.now()});
+      state.tab=ROLE_TABS[user.role][0]; audit("Signed in"); autoSnap();
+      renderShell();
+    }else{
+      const fails=(info.fails||0)+1, until=fails>=MAX_ATTEMPTS?Date.now()+LOCK_MIN*6e4:0;
+      store.set("lock",{fails:until?0:fails,until});
+      const log=store.get("audit",[]); log.unshift({at:new Date().toISOString(),by:u||"(blank)",role:"-",action:"Failed sign-in attempt",incidentId:""}); store.set("audit",log.slice(0,300));
+      renderLogin(until?"":`Username or password is incorrect. ${MAX_ATTEMPTS-fails} attempt${MAX_ATTEMPTS-fails===1?"":"s"} left before sign-in is locked for ${LOCK_MIN} minutes.`);
+    }
+  });
+  bindTheme();
+  if(!locked) $("#lu").focus();
+}
+function logout(reason){
+  if(state.user) audit(reason==="timeout"?"Session timed out":"Signed out");
+  document.querySelectorAll(".modal-back").forEach(m=>m.remove());
+  state.user=null; store.set("session",null); renderLogin(reason==="timeout"?"You were signed out after "+SESSION_TIMEOUT_MIN+" minutes without activity.":"");
+}
+function touch(){ if(state.user) store.set("session",{username:state.user.username,last:Date.now()}); }
+["click","keydown"].forEach(ev=>document.addEventListener(ev,touch,{passive:true}));
+document.addEventListener("click",()=>{ const ap=$("#acctPanel"); if(ap&&!ap.hidden){ ap.hidden=true; const ab=$("#acctBtn"); if(ab) ab.setAttribute("aria-expanded","false"); } });
+document.addEventListener("keydown",e=>{ if(e.key==="Escape"){ const ap=$("#acctPanel"); if(ap&&!ap.hidden){ ap.hidden=true; $("#acctBtn").focus(); } } });
+
+/* ---------- Work queues ---------- */
+function unackedCritical(){ return incidents().filter(i=>i.severity==="critical"&&!i.acknowledgedBy&&i.status!=="Resolved"); }
+function itQueues(){
+  const d=incidents(), crit=unackedCritical(), critIds=new Set(crit.map(i=>i.id)), week=Date.now()-7*864e5;
+  return {
+    critical:crit,
+    open:d.filter(i=>i.status==="Open"&&!critIds.has(i.id)),
+    progress:d.filter(i=>i.status==="In progress"),
+    pdpa:d.filter(i=>i.guestData==="Yes"&&(i.pdpa==="Not assessed"||i.pdpa.startsWith("Notifiable"))),
+    resolved:d.filter(i=>i.status==="Resolved"&&new Date(i.closedAt||i.reportedAt).getTime()>week)
+  };
+}
+function tabCount(t){
+  if(t==="itcases"){ const q=itQueues(); return q.critical.length+q.open.length; }
+  return 0;
+}
+
+/* ---------- Shell ---------- */
+function renderShell(){
+  const u=state.user, tabs=ROLE_TABS[u.role];
+  $("#app").innerHTML=`
+  <header class="topbar">
+    <div class="topbar-in">
+      ${logo("Grandview Hotel")}
+      <div class="spacer"></div>
+      <span class="live desk-only" title="${shared()?"Shared Google Sheet database, checked every "+SYNC_MS/1000+" seconds":"Demo mode: data is saved in this browser only"}"><span class="dot liveDot" aria-hidden="true"></span><span class="liveText"></span></span>
+      <span class="desk-only">${themeSwitch()}</span>
+      <div class="user-chip desk-only"><span>${esc(u.name)}</span><span class="role">${ROLE_LABEL[u.role]}</span></div>
+      <button class="btn sm desk-only" id="logoutBtn">Sign out</button>
+      <div class="acct">
+        <span class="dot liveDot" aria-hidden="true"></span>
+        <button class="acct-btn" id="acctBtn" aria-expanded="false" aria-controls="acctPanel"><span class="av" aria-hidden="true">${esc(u.name.charAt(0))}</span>${esc(u.name)} <span aria-hidden="true">▾</span></button>
+        <div class="acct-panel" id="acctPanel" hidden>
+          <div class="row"><b>${esc(u.name)}</b><span class="role">${ROLE_LABEL[u.role]}</span></div>
+          <span class="live small"><span class="dot liveDot" aria-hidden="true"></span><span class="liveText"></span></span>
+          <div><div class="eyebrow" style="margin-bottom:.35rem">Theme</div>${themeSwitch()}</div>
+          <button class="btn" id="logoutBtn2">Sign out</button>
+        </div>
+      </div>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Main">${tabs.map(t=>{const c=tabCount(t);return `<button class="tab" role="tab" data-tab="${t}" aria-selected="${state.tab===t}" aria-label="${TAB_LABEL[t]}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${TAB_ICON[t]}"/></svg><span class="t-long">${TAB_LABEL[t]}</span><span class="t-short">${TAB_SHORT[t]}</span>${c?`<span class="count">${c}</span>`:""}</button>`;}).join("")}</nav>
+  </header>
+  <main id="main"></main>`;
+  $("#logoutBtn").onclick=()=>logout();
+  $("#logoutBtn2").onclick=()=>logout();
+  const ab=$("#acctBtn"), ap=$("#acctPanel");
+  ab.onclick=e=>{ e.stopPropagation(); ap.hidden=!ap.hidden; ab.setAttribute("aria-expanded",String(!ap.hidden)); };
+  ap.onclick=e=>e.stopPropagation();
+  bindTheme(); paintLive();
+  document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{ state.tab=b.dataset.tab; state.page=1; renderShell(); scrollTo(0,0); });
+  snapshotStatuses();
+  ({report:renderReport,mine:renderMine,itcases:renderItCases,dashboard:renderDashboard,log:renderLog,system:renderSystem})[state.tab]();
+  bindOpenButtons(); paintLive();
+}
+function bindOpenButtons(){
+  document.querySelectorAll("#main [data-view]").forEach(b=>b.onclick=()=>openCase(b.dataset.view));
+  document.querySelectorAll("#main [data-more]").forEach(b=>b.onclick=()=>{ b.parentElement.querySelectorAll(".qitem[hidden]").forEach(x=>x.hidden=false); b.remove(); });
+}
+function rerender(){ const y=scrollY; renderShell(); scrollTo(0,y); }
+
+function qList(items,emptyText,noteFn){
+  if(!items.length) return `<p class="empty">${emptyText}</p>`;
+  const sorted=[...items].sort((a,b)=>SEV_RANK[b.severity]-SEV_RANK[a.severity]||a.reportedAt.localeCompare(b.reportedAt));
+  return sorted.map((i,ix)=>`<div class="qitem"${ix>=5?" hidden":""}>
+    <span class="mono"><b>${i.id}</b></span>${sevPill(i.severity)}
+    <div class="desc">${esc(typeName(i.typeId))} · ${esc(i.dept)} · reported ${ago(i.reportedAt)}${noteFn?`<div class="note">${noteFn(i)}</div>`:""}</div>
+    <button class="btn sm primary" data-view="${i.id}">Open case</button></div>`).join("")+(sorted.length>5?`<button class="btn more-btn" data-more>Show all ${sorted.length}</button>`:"");
+}
+const qHead=(n,title,hint)=>`<div class="qhead"><div><h3>${title} <span class="qnum ${n?"":"zero"}">${n}</span></h3>${hint?`<div class="muted small">${hint}</div>`:""}</div></div>`;
+const short=(s,n)=>esc(s.length>n?s.slice(0,n)+"…":s);
+
+/* ---------- LIN: case queue ---------- */
+const lastNote=i=>{ const a=(i.actions||[]).slice(-1)[0]; return a?esc(a.text):""; };
+function renderItCases(){
+  const q=itQueues();
+  $("#main").innerHTML=`${q.critical.length?`<section class="alert" id="itAlert"><div class="alert-head">Critical alerts (${q.critical.length})</div>
+    ${q.critical.map(i=>`<div class="alert-item"><span class="mono"><b>${i.id}</b></span>${sevPill("critical")}<span class="desc">${esc(typeName(i.typeId))}: ${short(i.description,110)}<div class="muted small">${esc(i.dept)} · reported ${ago(i.reportedAt)}${i.guestData==="Yes"?" · guest data involved":""}</div></span><button class="btn sm red" data-view="${i.id}">Open case</button></div>`).join("")}</section>`:""}
+  <div class="grid2b">
+    <section class="panel" id="qNew">${qHead(q.open.length,"New cases")}${qList(q.open,"No new cases.",i=>short(i.description,90))}</section>
+    <section class="panel" id="qProgress">${qHead(q.progress.length,"In progress")}${qList(q.progress,"Nothing in progress.",lastNote)}</section>
+    <section class="panel" id="qPdpa">${qHead(q.pdpa.length,"PDPA decisions")}${qList(q.pdpa,"No PDPA decisions pending.",i=>"PDPA: "+esc(i.pdpa))}</section>
+    <section class="panel" id="qResolved">${qHead(q.resolved.length,"Resolved in the last 7 days")}${qList(q.resolved,"Nothing resolved this week.",i=>esc(i.fixNote))}</section>
+  </div>`;
+}
+
+/* ---------- Part 1: Report form ---------- */
+function renderReport(){
+  const u=state.user, gf=store.get("googleFormUrl","");
+  $("#main").innerHTML=`
+  <div class="form-layout">
+  <section class="panel">
+    <div class="panel-head"><div><div class="eyebrow">Grandview Hotel</div><h2>Report a security incident</h2></div>
+      ${gf?`<a class="btn sm" href="${esc(gf)}" target="_blank" rel="noopener">Google Form</a>`:""}</div>
+    <form id="repForm" novalidate>
+      <div class="autofill" aria-label="Your details, filled in from your account">
+        <div><b>Employee</b>${esc(u.name)}</div><div><b>Employee ID</b><span class="mono">${esc(u.empId)}</span></div><div><b>Department</b>${esc(u.dept)}</div>
+      </div>
+      <div class="form-grid" style="margin-top:1rem">
+        <div class="field full"><label for="fType">What happened? <span class="req">*</span></label>
+          <select id="fType" required><option value="">Choose the closest match</option>${INCIDENT_TYPES.map(t=>`<option value="${t.id}">${t.name}</option>`).join("")}</select>
+          <div class="err" hidden>Choose the type of incident.</div></div>
+        <div class="field"><label for="fWhen">When did it happen? <span class="req">*</span></label>
+          <input type="datetime-local" id="fWhen" required value="${localInputValue(new Date())}">
+          <div class="err" hidden>Enter a date and time that is not in the future.</div></div>
+        <div class="field"><label for="fSystem">System or area involved <span class="req">*</span></label>
+          <select id="fSystem" required><option value="">Choose one</option>${SYSTEMS.map(s=>`<option>${s}</option>`).join("")}</select>
+          <div class="err" hidden>Choose the system or area.</div></div>
+        <div class="field full"><label for="fLoc">Location in the hotel</label><input type="text" id="fLoc" placeholder="For example: Lobby front desk, Reservations office L2" maxlength="80"></div>
+        <div class="field full"><span id="sevLbl" style="font-weight:600;font-size:.9rem;display:block;margin-bottom:.3rem">How serious is it? <span class="req">*</span></span>
+          <div class="sev-pick" role="radiogroup" aria-labelledby="sevLbl">${SEVERITIES.map(s=>`<div><input type="radio" name="fSev" id="sev_${s}" value="${s}"><label for="sev_${s}" class="${s}">${s[0].toUpperCase()+s.slice(1)}</label></div>`).join("")}</div>
+          <div class="err" hidden>Choose a severity level.</div></div>
+        <div class="field full"><span style="font-weight:600;font-size:.9rem;display:block;margin-bottom:.3rem">Was guest information involved? <span class="req">*</span></span>
+          <div class="radio-row" role="radiogroup">${["Yes","No","Not sure"].map(v=>`<label><input type="radio" name="fGuest" value="${v}"> ${v}</label>`).join("")}</div>
+          <div class="err" hidden>Tell us if guest information was involved.</div></div>
+        <div class="field full"><label for="fDesc">Describe what you saw <span class="req">*</span></label>
+          <textarea id="fDesc" required maxlength="1000" placeholder="What happened, who or what was involved, and anything you already did (for example: logged out, told your supervisor)."></textarea>
+          <div class="hint"><span id="descCount">0</span>/1000</div>
+          <div class="err" hidden>Describe the incident in at least 20 characters.</div></div>
+      </div>
+      <div class="row" style="margin-top:1rem"><button class="btn red" type="submit">Submit report</button><button class="btn" type="reset">Clear form</button></div>
+    </form>
+    <div id="repDone"></div>
+  </section>
+  </div>`;
+  const f=$("#repForm");
+  $("#fType").onchange=e=>{ const t=INCIDENT_TYPES.find(x=>x.id===e.target.value); if(t) $("#sev_"+t.def).checked=true; };
+  $("#fDesc").oninput=e=>$("#descCount").textContent=e.target.value.length;
+  f.addEventListener("reset",()=>setTimeout(()=>{$("#descCount").textContent="0";f.querySelectorAll(".field").forEach(x=>{x.classList.remove("invalid");$(".err",x).hidden=true;});},0));
+  f.addEventListener("submit",async e=>{
+    e.preventDefault();
+    const v={type:$("#fType").value,when:$("#fWhen").value,system:$("#fSystem").value,loc:$("#fLoc").value.trim(),
+      sev:(f.querySelector("input[name=fSev]:checked")||{}).value,guest:(f.querySelector("input[name=fGuest]:checked")||{}).value,desc:$("#fDesc").value.trim()};
+    const whenDate=v.when?new Date(v.when):null;
+    const checks=[[$("#fType"),!!v.type],[$("#fWhen"),whenDate&&!isNaN(whenDate)&&whenDate.getTime()<=Date.now()+6e4],[$("#fSystem"),!!v.system],
+      [$("#sev_low"),!!v.sev],[f.querySelector("input[name=fGuest]"),!!v.guest],[$("#fDesc"),v.desc.length>=20]];
+    let ok=true, first=null;
+    checks.forEach(([el,valid])=>{ const fld=el.closest(".field"); fld.classList.toggle("invalid",!valid); $(".err",fld).hidden=valid; if(!valid){ok=false; if(!first)first=el;} });
+    if(!ok){ first.focus(); return; }
+    /* Mask anything that looks like a full card number before saving */
+    const cleanDesc=v.desc.replace(/\b\d(?:[ -]?\d){12,18}\b/g,m=>"[card number removed ending "+m.replace(/\D/g,"").slice(-4)+"]");
+    const data=incidents(); const nextNum=data.reduce((m,x)=>Math.max(m,parseInt(x.id.slice(4))||0),1000)+1;
+    const now=new Date().toISOString();
+    const rec=Object.assign({id:"INC-"+nextNum,occurredAt:whenDate.toISOString(),reportedAt:now,typeId:v.type,severity:v.sev,system:v.system,location:v.loc||"Not given",
+      description:cleanDesc,guestData:v.guest,reporterId:u.empId,reporterName:u.name,dept:u.dept,status:"Open"},blankCase());
+    rec.actions.push({at:now,by:u.name,role:u.role,text:"Reported the incident"});
+    let saved=rec;
+    if(shared()){
+      /* Shared mode: the Google Sheet gives the case its reference number */
+      const btn=f.querySelector("button[type=submit]"); btn.disabled=true; btn.textContent="Saving…";
+      try{ delete rec.id; saved=(await api("create",{incident:rec})).incident; }
+      catch(err){ btn.disabled=false; btn.textContent="Submit report"; $("#repDone").innerHTML=`<div class="alert" role="alert"><b>Your report was not saved.</b><span class="small">${esc(err.message)} Check your internet connection and press Submit again. Your answers are still in the form.</span></div>`; return; }
+    }
+    const d2=incidents(); d2.push(saved); saveIncidents(d2,"new"); audit("Submitted report",saved.id);
+    state.knownStatus.set(saved.id,saved.status);
+    Object.assign(rec,saved);
+    f.hidden=true;
+    $("#repDone").innerHTML=`<div class="confirm" role="status"><h3>Thank you. Your report has been received.</h3>
+      <p style="margin:0">Reference number <b class="mono">${rec.id}</b>, saved ${fmtFull(rec.reportedAt)}. ${rec.severity==="critical"?"IT security has been alerted.":""}</p>
+      ${cleanDesc!==v.desc?`<p class="small" style="margin:0">A number that looked like a card number was hidden before saving.</p>`:""}
+      <div class="row"><button class="btn primary" id="another">Report another incident</button></div></div>`;
+    $("#another").onclick=renderReport;
+    if(rec.severity==="critical") toast("Critical incident "+rec.id+" sent to IT security.",true);
+  });
+}
+
+function renderMine(){
+  const mine=incidents().filter(i=>i.reporterId===state.user.empId).sort((a,b)=>b.reportedAt.localeCompare(a.reportedAt));
+  $("#main").innerHTML=`<section class="panel"><div class="panel-head"><div><div class="eyebrow">Your history</div><h2>My reports</h2></div><span class="muted small">${mine.length} report${mine.length===1?"":"s"}</span></div>
+  ${mine.length?`<div class="tablewrap cards-wrap"><table class="data cards"><thead><tr><th>Reference</th><th>Reported</th><th>Type</th><th>Severity</th><th>Status</th></tr></thead><tbody>
+  ${mine.map(i=>`<tr><td class="mono" data-label="Reference"><b>${i.id}</b></td><td class="mono" data-label="Reported">${fmt(i.reportedAt)}</td><td data-label="Type">${esc(typeName(i.typeId))}</td><td data-label="Severity">${sevPill(i.severity)}</td><td data-label="Status">${statusPill(i.status)}</td></tr>`).join("")}
+  </tbody></table></div>`:`<p class="muted">No reports yet.</p>`}</section>`;
+}
+
+/* ---------- Case panel ---------- */
+function openCase(id){
+  const i=incidents().find(x=>x.id===id); if(!i) return;
+  const role=state.user.role;
+  document.querySelectorAll(".modal-back").forEach(m=>m.remove());
+  const back=document.createElement("div"); back.className="modal-back";
+  const parts=[];
+  if(role==="admin"){
+    const workBox=(lbl,ph,btns)=>`<div class="field"><label for="cWork">${lbl}</label><textarea id="cWork" placeholder="${ph}"></textarea><div class="err" hidden>Write at least 10 characters.</div></div><div class="row">${btns}</div>`;
+    if(!i.acknowledgedBy&&i.status!=="Resolved") parts.push(`<div class="row"><button class="btn red" id="cAck">Acknowledge</button></div>`);
+    if(i.status!=="Resolved") parts.push(`<div class="row"><label for="cSev" style="margin:0">Severity</label><select id="cSev" style="width:auto">${SEVERITIES.map(s=>`<option value="${s}" ${i.severity===s?"selected":""}>${s}</option>`).join("")}</select></div>`);
+    if(i.status==="Open") parts.push(workBox("Action plan","For example: reset the password, check the login history and turn on MFA.",`<button class="btn primary" id="cStart">Start work</button>`));
+    if(i.status==="In progress"){
+      if(i.instruction) parts.push(`<div class="instr"><b>Action plan:</b> ${esc(i.instruction)}</div>`);
+      parts.push(workBox("Work note","For example: password reset, IP 203.0.113.7 blocked, MFA turned on.",`<button class="btn" id="cProgress">Save note</button><button class="btn primary" id="cResolve">Resolve case</button>`));
+    }
+    if(i.status==="Resolved") parts.push(`<div class="instr fix"><b>Resolution:</b> ${esc(i.fixNote||"")}</div><div class="row"><button class="btn" id="cReopen">Reopen case</button></div>`);
+    parts.push(`<div class="row"><label for="cPdpa" style="margin:0">PDPA decision</label><select id="cPdpa" style="width:auto">${PDPA.map(p=>`<option ${i.pdpa===p?"selected":""}>${p}</option>`).join("")}</select>${i.guestData==="Yes"?`<span class="small" style="color:var(--sev-crit);font-weight:700">Guest data involved</span>`:""}</div>`);
+    parts.push(`<div id="delZone"></div><div class="row"><button class="btn danger sm" id="cDel">Delete record</button></div>`);
+  }
+  back.innerHTML=`<div class="modal" role="dialog" aria-modal="true" aria-labelledby="mt">
+    <div class="row" style="justify-content:space-between"><h2 id="mt"><span class="mono">${i.id}</span> · ${esc(typeName(i.typeId))}</h2><div class="row">${sevPill(i.severity)}${statusPill(i.status)}</div></div>
+    <dl class="kv"><dt>Occurred</dt><dd>${fmtFull(i.occurredAt)}</dd><dt>Reported</dt><dd>${fmtFull(i.reportedAt)} by ${esc(i.reporterName)} (${esc(i.reporterId)}), ${esc(i.dept)}</dd>
+    <dt>System</dt><dd>${esc(i.system)}</dd><dt>Location</dt><dd>${esc(i.location)}</dd><dt>Guest data</dt><dd>${esc(i.guestData)}</dd><dt>PDPA</dt><dd>${esc(i.pdpa)}</dd>
+    <dt>Handled by</dt><dd>${i.assignedTo?esc(i.assignedTo)+", since "+fmtFull(i.assignedAt):"Not started"}</dd><dt>Description</dt><dd>${esc(i.description)}</dd>
+    ${role!=="admin"&&i.instruction?`<dt>Action plan</dt><dd>${esc(i.instruction)}</dd>`:""}${role!=="admin"&&i.fixNote?`<dt>Resolution</dt><dd>${esc(i.fixNote)}</dd>`:""}</dl>
+    ${parts.length?`<div class="action-box"><h3>Actions</h3>${parts.join("")}</div>`:""}
+    <div><h3 style="margin-bottom:.5rem">Case history</h3><ul class="timeline">${(i.actions||[]).map(a=>`<li><span class="mono small">${fmt(a.at)}</span><span><b>${esc(a.by)}</b> <span class="muted">(${esc(ROLE_LABEL[a.role]||a.role)})</span>: ${esc(a.text)}</span></li>`).join("")}</ul></div>
+    <div class="row" style="justify-content:flex-end"><button class="btn" id="closeM">Close</button></div></div>`;
+  document.body.appendChild(back);
+  const close=()=>{ back.remove(); rerender(); };
+  const done=(msg)=>{ toast(msg); back.remove(); rerender(); openCase(id); };
+  $("#closeM",back).onclick=close;
+  back.onclick=e=>{ if(e.target===back) close(); };
+  back.addEventListener("keydown",e=>{ if(e.key==="Escape") close(); });
+  const need=(sel,min)=>{ const el=$(sel,back), ok=el&&el.value.trim().length>=min; const fld=el.closest(".field"); fld.classList.toggle("invalid",!ok); $(".err",fld).hidden=ok; if(!ok) el.focus(); return ok?el.value.trim():null; };
+  const on=(sel,fn)=>{ const el=$(sel,back); if(el) el.onclick=fn; };
+  back.querySelectorAll("textarea").forEach(t=>t.addEventListener("input",()=>{ const fld=t.closest(".field"); if(fld&&t.value.trim().length>=10){ fld.classList.remove("invalid"); $(".err",fld).hidden=true; } }));
+  const ackFields=r=>{ if(!r.acknowledgedBy){ r.acknowledgedBy=IT.name; r.acknowledgedAt=new Date().toISOString(); } };
+  on("#cAck",()=>{ updateCase(id,ackFields,"Acknowledged the case"); done(id+" acknowledged."); });
+  const sevSel=$("#cSev",back); if(sevSel) sevSel.onchange=()=>{ const old=i.severity; updateCase(id,r=>r.severity=sevSel.value,`Changed severity from ${old} to ${sevSel.value}`); done("Severity updated."); };
+  on("#cStart",()=>{ const t=need("#cWork",10); if(!t) return; updateCase(id,r=>{ ackFields(r); r.status="In progress"; r.assignedTo=IT.name; r.assignedAt=new Date().toISOString(); r.instruction=t; },"Started work: "+t); done(id+" is in progress."); });
+  on("#cProgress",()=>{ const t=need("#cWork",10); if(!t) return; updateCase(id,()=>{},"Progress note: "+t); done("Note saved."); });
+  on("#cResolve",()=>{ const t=need("#cWork",10); if(!t) return; updateCase(id,r=>{ const now=new Date().toISOString(); r.status="Resolved"; r.fixNote=t; r.fixedAt=now; r.closedAt=now; },"Resolved: "+t); done(id+" resolved."); });
+  on("#cReopen",()=>{ updateCase(id,r=>{ r.status="In progress"; r.closedAt=null; if(!r.assignedTo){ r.assignedTo=IT.name; r.assignedAt=new Date().toISOString(); } },"Reopened the case"); done(id+" reopened."); });
+  const pd=$("#cPdpa",back); if(pd) pd.onchange=()=>{ updateCase(id,r=>r.pdpa=pd.value,"PDPA decision: "+pd.value); done("PDPA decision saved."); };
+  on("#cDel",()=>{
+    $("#delZone",back).innerHTML=`<div class="alert"><b>Delete ${i.id} permanently?</b><span class="small">This is recorded in the audit log.</span><div class="row"><button class="btn danger" id="delYes">Delete</button><button class="btn" id="delNo">Cancel</button></div></div>`;
+    $("#delNo",back).onclick=()=>$("#delZone",back).innerHTML="";
+    $("#delYes",back).onclick=()=>{ saveIncidents(incidents().filter(x=>x.id!==i.id),"delete"); apiQuiet("delete",{id:i.id},"Could not delete the case in the Google Sheet."); audit("Deleted record",i.id); toast(i.id+" deleted."); close(); };
+  });
+  $("#closeM",back).focus();
+}
+
+/* ---------- Part 2: Incident database ---------- */
+function filtered(){
+  const f=state.filters, q=f.q.toLowerCase();
+  let d=incidents().filter(i=>
+    (!f.type||i.typeId===f.type)&&(!f.dept||i.dept===f.dept)&&(!f.sev||i.severity===f.sev)&&(!f.status||i.status===f.status)&&
+    (!f.from||i.reportedAt.slice(0,10)>=f.from)&&(!f.to||i.reportedAt.slice(0,10)<=f.to)&&
+    (!q||[i.id,i.description,i.reporterName,i.system,i.location,typeName(i.typeId),i.dept,i.instruction,i.fixNote].join(" ").toLowerCase().includes(q)));
+  const {key,dir}=state.sort, m=dir==="asc"?1:-1;
+  d.sort((a,b)=>{ let x=a[key],y=b[key]; if(key==="severity"){x=SEV_RANK[x];y=SEV_RANK[y];} if(key==="typeId"){x=typeName(x);y=typeName(y);} if(key==="status"){x=STATUSES.indexOf(x);y=STATUSES.indexOf(y);} return (x>y?1:x<y?-1:0)*m; });
+  return d;
+}
+const activeFilters=()=>Object.values(state.filters).filter(Boolean).length;
+const filterOpen=()=>state.filterOpen!==undefined?state.filterOpen:(activeFilters()>0||matchMedia("(min-width:761px)").matches);
+function renderLog(){
+  const role=state.user.role, f=state.filters, rows=filtered(), per=15, pages=Math.max(1,Math.ceil(rows.length/per));
+  state.page=Math.min(state.page,pages);
+  const slice=rows.slice((state.page-1)*per,state.page*per);
+  const th=(k,l)=>`<th aria-sort="${state.sort.key===k?(state.sort.dir==="asc"?"ascending":"descending"):"none"}"><button data-sort="${k}">${l}${state.sort.key===k?(state.sort.dir==="asc"?" ▲":" ▼"):""}</button></th>`;
+  $("#main").innerHTML=`<section class="panel">
+    <div class="panel-head"><div><div class="eyebrow">Incident database</div><h2>All cases</h2></div>
+      <button class="btn sm" id="csvBtn">Export CSV</button></div>
+    <details class="filter-box" id="filterBox" ${filterOpen()?"open":""}><summary>Search, filters and sort${activeFilters()?` <span class="qnum">${activeFilters()}</span>`:""}</summary>
+    <div class="filters">
+      <div><label for="q">Search</label><input type="search" id="q" placeholder="ID, words, name, system…" value="${esc(f.q)}"></div>
+      <div><label for="ft">Type</label><select id="ft"><option value="">All types</option>${INCIDENT_TYPES.map(t=>`<option value="${t.id}" ${f.type===t.id?"selected":""}>${t.name}</option>`).join("")}</select></div>
+      <div><label for="fd">Department</label><select id="fd"><option value="">All</option>${DEPARTMENTS.map(d=>`<option ${f.dept===d?"selected":""}>${esc(d)}</option>`).join("")}</select></div>
+      <div><label for="fs">Severity</label><select id="fs"><option value="">All</option>${SEVERITIES.map(s=>`<option value="${s}" ${f.sev===s?"selected":""}>${s}</option>`).join("")}</select></div>
+      <div><label for="ffrom">From</label><input type="date" id="ffrom" value="${f.from}"></div>
+      <div><label for="fto">To</label><input type="date" id="fto" value="${f.to}"></div>
+    </div>
+    <div class="row" style="margin:-.25rem 0 1rem"><label for="fst" style="margin:0;font-size:.8rem;color:var(--ink-2)">Status</label>
+      <select id="fst" style="width:auto;min-height:2.2rem"><option value="">All</option>${STATUSES.map(s=>`<option ${f.status===s?"selected":""}>${s}</option>`).join("")}</select>
+      <label for="sortSel" style="margin:0 0 0 .5rem;font-size:.8rem;color:var(--ink-2)">Sort</label>
+      <select id="sortSel" style="width:auto;min-height:2.2rem">${[["reportedAt|desc","Newest first"],["reportedAt|asc","Oldest first"],["severity|desc","Most serious first"],["status|asc","Status"],["dept|asc","Department"]].map(([v,l])=>`<option value="${v}" ${state.sort.key+"|"+state.sort.dir===v?"selected":""}>${l}</option>`).join("")}</select>
+      <button class="btn sm" id="clearF">Clear filters</button></div></details>
+    <div class="tablewrap cards-wrap"><table class="data cards"><thead><tr>${th("id","ID")}${th("reportedAt","Reported")}${th("typeId","Type")}${th("severity","Severity")}${th("dept","Department")}<th>Reporter</th><th>Description</th>${th("status","Status")}<th></th></tr></thead><tbody>
+    ${slice.length?slice.map(i=>`<tr class="${i.severity==="critical"?"is-crit":""}">
+      <td class="mono" data-label="ID"><b>${i.id}</b></td><td class="mono" data-label="Reported">${fmt(i.reportedAt)}</td><td data-label="Type">${esc(typeName(i.typeId))}</td><td data-label="Severity">${sevPill(i.severity)}</td><td data-label="Department">${esc(i.dept)}</td>
+      <td data-label="Reporter"><span>${esc(i.reporterName)} <span class="muted small mono">${esc(i.reporterId)}</span></span></td><td class="desc" data-label="Details">${short(i.description,100)}</td>
+      <td data-label="Status">${statusPill(i.status)}</td><td data-label=""><button class="btn sm" data-view="${i.id}">Open case</button></td></tr>`).join(""):`<tr><td colspan="9" class="muted" style="padding:1.5rem" data-label="">No matching cases.</td></tr>`}
+    </tbody></table></div>
+    <div class="table-foot"><span>${rows.length} of ${incidents().length} records</span>
+      <span class="row"><button class="btn sm" id="prev" ${state.page<=1?"disabled":""}>Previous</button><span class="mono">Page ${state.page} / ${pages}</span><button class="btn sm" id="next" ${state.page>=pages?"disabled":""}>Next</button></span></div>
+  </section>`;
+  const again=()=>{ renderLog(); bindOpenButtons(); };
+  const bind=(id,key,ev="change")=>$(id).addEventListener(ev,e=>{state.filters[key]=e.target.value;state.page=1;again(); if(ev==="input"){const el=$(id);el.focus();el.setSelectionRange(el.value.length,el.value.length);}});
+  bind("#q","q","input");bind("#ft","type");bind("#fd","dept");bind("#fs","sev");bind("#ffrom","from");bind("#fto","to");bind("#fst","status");
+  $("#clearF").onclick=()=>{state.filters={q:"",type:"",dept:"",sev:"",status:"",from:"",to:""};again();};
+  $("#filterBox").addEventListener("toggle",e=>{ state.filterOpen=e.target.open; });
+  $("#sortSel").onchange=e=>{ const [k,d]=e.target.value.split("|"); state.sort={key:k,dir:d}; again(); };
+  document.querySelectorAll("[data-sort]").forEach(b=>b.onclick=()=>{const k=b.dataset.sort; state.sort={key:k,dir:state.sort.key===k&&state.sort.dir==="desc"?"asc":"desc"}; again();});
+  $("#prev").onclick=()=>{state.page--;again();}; $("#next").onclick=()=>{state.page++;again();};
+  $("#csvBtn").onclick=()=>exportCsv(rows,"linx-incidents");
+}
+function toCsv(rows){
+  const cols=[["id","Incident ID"],["reportedAt","Reported at"],["occurredAt","Occurred at"],["typeId","Type"],["severity","Severity"],["system","System"],["location","Location"],["guestData","Guest data involved"],["dept","Department"],["reporterId","Employee ID"],["reporterName","Reported by"],["status","Status"],["acknowledgedBy","Acknowledged by"],["assignedTo","Handled by"],["instruction","Action plan"],["fixNote","Resolution"],["pdpa","PDPA decision"],["description","Description"]];
+  const q=v=>`"${String(v==null?"":v).replace(/"/g,'""')}"`;
+  return [cols.map(c=>q(c[1])).join(",")].concat(rows.map(r=>cols.map(([k])=>q(k==="typeId"?typeName(r[k]):r[k])).join(","))).join("\r\n");
+}
+function exportCsv(rows,name){
+  const csv=toCsv(rows), file=`${name}-${new Date().toISOString().slice(0,10)}.csv`;
+  try{ const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"})); a.download=file; document.body.appendChild(a); a.click(); a.remove(); }catch(e){}
+  showTextModal("Report exported",`The file <b class="mono">${file}</b> is downloading (${rows.length} records). If your browser blocked the download, copy the text below and paste it into Excel or Google Sheets.`,csv);
+  audit(`Exported ${rows.length} records to CSV`);
+}
+function showTextModal(title,html,text){
+  const back=document.createElement("div"); back.className="modal-back";
+  back.innerHTML=`<div class="modal" role="dialog" aria-modal="true"><h2>${title}</h2><p style="margin:0">${html}</p><pre id="txt">${esc(text)}</pre>
+    <div class="row" style="justify-content:flex-end"><button class="btn" id="copyT">Copy text</button><button class="btn primary" id="closeT">Close</button></div></div>`;
+  document.body.appendChild(back);
+  $("#closeT",back).onclick=()=>back.remove();
+  $("#copyT",back).onclick=()=>{ const sel=()=>{ const r=document.createRange(); r.selectNodeContents($("#txt",back)); getSelection().removeAllRanges(); getSelection().addRange(r); toast("Text selected. Press Ctrl+C to copy."); };
+    try{ navigator.clipboard.writeText(text).then(()=>toast("Copied."),sel); }catch(e){ sel(); } };
+}
+
+/* ---------- Part 3: Dashboard ---------- */
+function detectPatterns(data){
+  const now=Date.now(), day=864e5, out=[];
+  const inWin=(i,a,b)=>{const t=new Date(i.reportedAt).getTime();return t>now-a*day&&t<=now-b*day;};
+  INCIDENT_TYPES.forEach(t=>{
+    const cur=data.filter(i=>i.typeId===t.id&&inWin(i,7,0)).length, prev=data.filter(i=>i.typeId===t.id&&inWin(i,14,7)).length;
+    if(cur>=3&&cur>prev) out.push({tag:"Rising",text:`<b>${esc(t.name)}</b>: ${cur} reports in the last 7 days, up from ${prev} the week before.`});
+  });
+  const groups={};
+  data.filter(i=>inWin(i,7,0)).forEach(i=>{const k=i.dept+"|"+i.typeId;(groups[k]=groups[k]||[]).push(i);});
+  Object.entries(groups).forEach(([k,v])=>{ if(v.length>=3){ const [d,t]=k.split("|"); out.push({tag:"Recurring",text:`<b>${esc(d)}</b> reported <b>${esc(typeName(t))}</b> ${v.length} times this week (${v.map(x=>x.id).slice(-4).join(", ")}). This may point to one targeted account or a training gap.`}); }});
+  const sys={}; data.filter(i=>inWin(i,7,0)&&SEV_RANK[i.severity]>=3).forEach(i=>sys[i.system]=(sys[i.system]||0)+1);
+  Object.entries(sys).forEach(([s,n])=>{ if(n>=3) out.push({tag:"Hotspot",text:`<b>${esc(s)}</b> was involved in ${n} high or critical incidents this week.`}); });
+  const recent=data.filter(i=>inWin(i,30,0)), night=recent.filter(i=>{const h=new Date(i.occurredAt).getHours();return h>=22||h<6;});
+  if(recent.length&&night.length/recent.length>=.25) out.push({tag:"After hours",text:`${Math.round(night.length/recent.length*100)}% of incidents in the last 30 days happened between 22:00 and 06:00, when fewer staff are on duty.`});
+  const guest=recent.filter(i=>i.guestData==="Yes").length;
+  if(guest) out.push({tag:"Guest data",text:`${guest} incident${guest===1?"":"s"} in the last 30 days involved guest information and need a PDPA decision.`});
+  return out;
+}
+function lineChart(series,labels){
+  const W=640,H=220,L=34,R=24,T=14,B=30, max=Math.max(4,...series), step=Math.ceil(max/4);
+  const top=step*4, x=i=>L+i*(W-L-R)/(series.length-1), y=v=>T+(H-T-B)*(1-v/top);
+  let g=""; for(let v=0;v<=top;v+=step){ g+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="var(--chart-grid)"/><text x="${L-8}" y="${y(v)+4}" text-anchor="end">${v}</text>`; }
+  const pts=series.map((v,i)=>`${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(" ");
+  const area=`M${x(0)},${y(0)} L${pts.replace(/ /g," L")} L${x(series.length-1)},${y(0)} Z`;
+  const lbl=labels.map((l,i)=>i%Math.ceil(labels.length/7)===0||i===labels.length-1?`<text x="${x(i)}" y="${H-10}" text-anchor="middle">${l}</text>`:"").join("");
+  const li=series.length-1;
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Incidents reported per day">${g}<path d="${area}" fill="var(--chart-1)" fill-opacity=".10"/><polyline points="${pts}" fill="none" stroke="var(--chart-1)" stroke-width="2.2" stroke-linejoin="round"/>
+    <circle cx="${x(li)}" cy="${y(series[li])}" r="4.5" fill="var(--brand)"/><text x="${x(li)-8}" y="${y(series[li])-9}" text-anchor="end" style="font-weight:700;fill:var(--ink)">${series[li]} today</text>${lbl}</svg>`;
+}
+function barList(counts,max){ return `<div class="bars">${counts.map(([k,n])=>`<div class="bar-row"><span class="lbl" title="${esc(k)}">${esc(k)}</span><div class="bar-track"><div class="bar-fill" style="width:${max?n/max*100:0}%"></div></div><span class="n">${n}</span></div>`).join("")}</div>`; }
+function renderDashboard(){
+  const all=incidents(), days=+state.dashRange, now=Date.now(), role=state.user.role;
+  const data=all.filter(i=>new Date(i.reportedAt).getTime()>now-days*864e5&&(!state.dashDept||i.dept===state.dashDept));
+  const crit=unackedCritical();
+  const byStatus=s=>data.filter(i=>i.status===s).length;
+  const critOpen=data.filter(i=>i.severity==="critical"&&i.status!=="Resolved").length;
+  const acked=data.filter(i=>i.acknowledgedAt);
+  const avgAck=acked.length?acked.reduce((s,i)=>s+(new Date(i.acknowledgedAt)-new Date(i.reportedAt)),0)/acked.length/36e5:0;
+  const nDays=Math.min(days,30), series=[], labels=[];
+  for(let d=nDays-1;d>=0;d--){ const day=new Date(now-d*864e5); const key=day.toDateString(); series.push(data.filter(i=>new Date(i.reportedAt).toDateString()===key).length); labels.push(day.toLocaleDateString("en-SG",{day:"numeric",month:"short"})); }
+  const byType=INCIDENT_TYPES.map(t=>[t.name,data.filter(i=>i.typeId===t.id).length]).filter(x=>x[1]).sort((a,b)=>b[1]-a[1]);
+  const byDept=DEPARTMENTS.map(d=>[d,data.filter(i=>i.dept===d).length]).filter(x=>x[1]).sort((a,b)=>b[1]-a[1]);
+  const sevCount=SEVERITIES.map(s=>[s,data.filter(i=>i.severity===s).length]), total=data.length||1;
+  const patterns=detectPatterns(all);
+  const recent=[...data].sort((a,b)=>b.reportedAt.localeCompare(a.reportedAt)).slice(0,8);
+  const sevColor={low:"var(--sev-low)",medium:"var(--sev-med)",high:"var(--sev-high)",critical:"var(--sev-crit)"};
+  $("#main").innerHTML=`
+  ${crit.length?`<section class="alert" aria-live="assertive"><div class="alert-head">Critical incidents not yet acknowledged (${crit.length})</div>
+    ${crit.map(i=>`<div class="alert-item"><span class="mono"><b>${i.id}</b></span>${sevPill("critical")}<span class="desc">${esc(typeName(i.typeId))}: ${short(i.description,120)}<div class="muted small">${esc(i.dept)} · reported ${fmt(i.reportedAt)} · ${ago(i.reportedAt)}</div></span>
+    <button class="btn sm ${role==="admin"?"red":""}" data-view="${i.id}">${role==="admin"?"Open case":"View"}</button></div>`).join("")}</section>`:""}
+  <div class="row" style="justify-content:space-between"><div><div class="eyebrow">Grandview Hotel</div><h2>Security overview</h2></div>
+    <div class="row"><label for="dr" style="margin:0" class="small muted">Period</label><select id="dr" style="width:auto">${[["7","Last 7 days"],["14","Last 14 days"],["30","Last 30 days"]].map(([v,l])=>`<option value="${v}" ${state.dashRange===v?"selected":""}>${l}</option>`).join("")}</select>
+    <label for="dd" style="margin:0" class="small muted">Department</label><select id="dd" style="width:auto"><option value="">All departments</option>${DEPARTMENTS.map(d=>`<option ${state.dashDept===d?"selected":""}>${esc(d)}</option>`).join("")}</select>
+    <button class="btn sm" id="dashCsv">Download report</button></div></div>
+  <div class="kpis">
+    <div class="kpi"><span class="eyebrow">Incidents reported</span><span class="v">${data.length}</span><span class="d">avg. ${avgAck.toFixed(1)} h to acknowledge</span></div>
+    <div class="kpi"><span class="eyebrow">Open</span><span class="v">${byStatus("Open")}</span><span class="d">not started yet</span></div>
+    <div class="kpi"><span class="eyebrow">In progress</span><span class="v">${byStatus("In progress")}</span><span class="d">${byStatus("Resolved")} resolved in this period</span></div>
+    <div class="kpi crit"><span class="eyebrow">Critical, unresolved</span><span class="v" style="color:var(--sev-crit)">${critOpen}</span><span class="d">${crit.length} not yet acknowledged</span></div>
+  </div>
+  <div class="grid2">
+    <section class="panel"><div class="panel-head"><h3>Incidents per day</h3><span class="muted small">last ${nDays} days</span></div><div class="chart">${lineChart(series,labels)}</div></section>
+    <section class="panel"><div class="panel-head"><h3>Severity mix</h3><span class="muted small">${data.length} incidents</span></div>
+      <div class="sevbar">${sevCount.filter(x=>x[1]).map(([s,n])=>`<div style="width:${n/total*100}%;background:${sevColor[s]}" title="${s}: ${n}">${n/total>.08?n:""}</div>`).join("")}</div>
+      <div class="legend">${sevCount.map(([s,n])=>`<span><i style="background:${sevColor[s]}"></i>${s[0].toUpperCase()+s.slice(1)} ${n} (${Math.round(n/total*100)}%)</span>`).join("")}</div>
+      <h3 style="margin:1.25rem 0 .75rem">Patterns and trends</h3>
+      <div class="patterns">${patterns.length?patterns.slice(0,5).map(p=>`<div class="pattern"><span class="tag">${p.tag}</span><span class="small">${p.text}</span></div>`).join(""):`<p class="muted small">No recurring issues found this week.</p>`}</div></section>
+  </div>
+  <div class="grid2b">
+    <section class="panel"><div class="panel-head"><h3>By incident type</h3></div>${byType.length?barList(byType,byType[0][1]):`<p class="muted">No incidents in this period.</p>`}</section>
+    <section class="panel"><div class="panel-head"><h3>By department</h3></div>${byDept.length?barList(byDept,byDept[0][1]):`<p class="muted">No incidents in this period.</p>`}</section>
+  </div>
+  <section class="panel"><div class="panel-head"><h3>Latest reports</h3><button class="btn sm" id="toLog">Open all cases</button></div>
+    <div class="tablewrap cards-wrap"><table class="data cards"><thead><tr><th>ID</th><th>Reported</th><th>Type</th><th>Severity</th><th>Department</th><th>Status</th></tr></thead><tbody>
+    ${recent.map(i=>`<tr class="${i.severity==="critical"?"is-crit":""}"><td class="mono" data-label="ID"><button class="btn sm" data-view="${i.id}">${i.id}</button></td><td class="mono" data-label="Reported">${fmt(i.reportedAt)}</td><td data-label="Type">${esc(typeName(i.typeId))}</td><td data-label="Severity">${sevPill(i.severity)}</td><td data-label="Department">${esc(i.dept)}</td><td data-label="Status">${statusPill(i.status)}</td></tr>`).join("")}
+    </tbody></table></div></section>
+`;
+  $("#dr").onchange=e=>{state.dashRange=e.target.value;renderDashboard();bindOpenButtons();};
+  $("#dd").onchange=e=>{state.dashDept=e.target.value;renderDashboard();bindOpenButtons();};
+  $("#toLog").onclick=()=>{ state.tab="log"; renderShell(); scrollTo(0,0); };
+  $("#dashCsv").onclick=()=>exportCsv(data,"linx-security-report");
+}
+
+/* ---------- LIN: System admin (backup, restore, audit) ---------- */
+function renderSystem(){
+  const log=store.get("audit",[]), backups=store.get("backups",[]), gf=store.get("googleFormUrl","");
+  $("#main").innerHTML=`<div class="grid2b">
+  <section class="panel"><div class="panel-head"><div><div class="eyebrow">Data protection</div><h2>Backup and restore</h2></div></div>
+    <p class="muted small" style="margin-top:0">A snapshot is taken automatically once a day when you sign in. You can also take one now or save a copy as a file.</p>
+    <div class="row"><button class="btn primary" id="bkNow">Take snapshot now</button><button class="btn" id="bkFile">Save backup file (JSON)</button>
+      <label class="btn" for="restoreFile" style="margin:0">Restore from file</label><input type="file" id="restoreFile" accept=".json,application/json" hidden></div>
+    <h3 style="margin:1.25rem 0 .5rem">Snapshots</h3>
+    ${backups.length?`<ul class="audit" id="snapList">${backups.map((b,ix)=>`<li class="row" style="justify-content:space-between"><span><span class="mono">${fmtFull(b.at)}</span> · ${b.data.length} records · ${esc(b.by)}</span><button class="btn sm" data-restore="${ix}">Restore</button></li>`).join("")}</ul>`:`<p class="muted small">No snapshots yet.</p>`}
+    <div id="restoreZone"></div>
+    <h3 style="margin:1.25rem 0 .5rem">Google Form link</h3>
+    <p class="muted small" style="margin-top:0">Paste the staff Google Form address so it appears on the report page as a second way to report.</p>
+    <div class="row"><input type="url" id="gfUrl" placeholder="https://forms.gle/…" value="${esc(gf)}" style="flex:1;min-width:200px"><button class="btn" id="gfSave">Save link</button></div>
+    <h3 style="margin:1.25rem 0 .5rem">Shared Google Sheet database</h3>
+    ${CONFIG.SHEET_URL?`<div class="conn ${sync.ok===false?"bad":"ok"}">Connected through the settings in <span class="mono">index.html</span>. Everyone who opens this website shares the same cases.<div class="hint" id="gsStatus"></div></div>`:`
+    <p class="muted small" style="margin-top:0">For a quick test you can paste the Apps Script web app link and access key here. This only connects <b>this browser</b>. To connect everyone, put them in the settings at the top of <span class="mono">index.html</span>.</p>
+    <div class="row"><input type="url" id="gsUrl" placeholder="https://script.google.com/macros/s/…/exec" value="${esc(store.get("sheetUrl",""))}" style="flex:2;min-width:200px"><input type="password" id="gsKey" placeholder="Access key" value="${esc(store.get("sheetKey",""))}" style="flex:1;min-width:120px"><button class="btn" id="gsSave">Connect</button></div>
+    <div class="hint" id="gsStatus"></div>`}
+    <h3 style="margin:1.25rem 0 .5rem">Example data</h3>
+    <p class="muted small" style="margin-top:0">${shared()?"Load example incidents into the shared Google Sheet so the charts have something to show. Remove them before real use.":"Example incidents help you demonstrate the charts."}</p>
+    <div class="row"><button class="btn" id="resetSample">${shared()?"Load example incidents into the sheet":"Reload example incidents"}</button><button class="btn danger" id="clearSample">Remove example incidents</button></div>
+  </section>
+  <section class="panel" id="auditPanel"><div class="panel-head"><div><div class="eyebrow">Accountability</div><h2>Audit log</h2></div><span class="muted small">${log.length} entries</span></div>
+    <ul class="audit">${log.slice(0,150).map(a=>`<li><span class="mono">${fmt(a.at)}</span> · <b>${esc(a.by)}</b> ${a.role!=="-"?`<span class="muted">(${esc(ROLE_LABEL[a.role]||a.role)})</span>`:""} · ${esc(a.action)} ${a.incidentId?`<span class="mono">${esc(a.incidentId)}</span>`:""}</li>`).join("")||"<li class='muted'>Nothing recorded yet.</li>"}</ul></section></div>`;
+  const snap=()=>{ const b=store.get("backups",[]); b.unshift({at:new Date().toISOString(),by:state.user.name,data:incidents()}); store.set("backups",b.slice(0,7)); audit("Took backup snapshot"); };
+  $("#bkNow").onclick=()=>{snap();toast("Snapshot saved.");renderSystem();bindOpenButtons();};
+  $("#bkFile").onclick=()=>{ const json=JSON.stringify({exportedAt:new Date().toISOString(),incidents:incidents()},null,2);
+    try{ const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([json],{type:"application/json"})); a.download=`linx-backup-${new Date().toISOString().slice(0,10)}.json`; document.body.appendChild(a); a.click(); a.remove(); }catch(e){}
+    audit("Saved backup file"); showTextModal("Backup file created","The backup is downloading. If the download was blocked, copy the text below into a .json file.",json); };
+  $("#restoreFile").onchange=e=>{ const file=e.target.files[0]; if(!file)return; const r=new FileReader(); r.onload=()=>{ try{ const obj=JSON.parse(r.result); const d=Array.isArray(obj)?obj:obj.incidents; if(!Array.isArray(d)||!d.every(x=>x.id&&x.typeId&&x.severity)) throw 0; confirmRestore(d,"file "+file.name); }catch(err){ toast("That file is not a LINX Secure Watch backup. Choose a .json file saved from this page.",true);} }; r.readAsText(file); };
+  document.querySelectorAll("[data-restore]").forEach(b=>b.onclick=()=>{ const s=backups[+b.dataset.restore]; confirmRestore(s.data,"snapshot from "+fmtFull(s.at)); });
+  $("#gfSave").onclick=()=>{ const v=$("#gfUrl").value.trim(); if(v&&!/^https:\/\/(docs\.google\.com\/forms|forms\.gle)\//.test(v)){toast("Enter a Google Forms link that starts with https://docs.google.com/forms or https://forms.gle",true);return;} store.set("googleFormUrl",v); audit("Updated Google Form link"); toast("Link saved."); };
+  if($("#gsSave")) $("#gsSave").onclick=()=>{ const u=$("#gsUrl").value.trim(), k=$("#gsKey").value.trim();
+    if(u&&!/^https:\/\/script\.google(usercontent)?\.com\//.test(u)){toast("Enter the Apps Script web app address that starts with https://script.google.com/",true);return;}
+    store.set("sheetUrl",u); store.set("sheetKey",k); store.set("incidents",u?[]:null); sync.first=true; sync.ok=null; sync.msg="Connecting…"; audit(u?"Connected Google Sheet":"Disconnected Google Sheet"); if(u) pullShared().then(()=>toast(sync.ok?"Connected to the Google Sheet.":"Could not reach the Google Sheet. Check the link and access key.",!sync.ok)); else renderShell(); };
+  $("#clearSample").onclick=()=>{ snap(); saveIncidents(incidents().filter(i=>!i.sample),"clear"); apiQuiet("replaceAll",{incidents:incidents()}); audit("Removed example incidents"); toast("Example incidents removed. A snapshot was taken first."); renderShell(); };
+  $("#resetSample").onclick=()=>{ snap(); const keep=incidents().filter(i=>!i.sample), ex=makeSampleData(); let n=Math.max(1000,...keep.map(i=>parseInt(i.id.slice(4))||0)); const merged=ex.concat(keep).sort((a,b)=>a.reportedAt.localeCompare(b.reportedAt)); if(keep.length){ ex.forEach(i=>i.id="INC-"+(++n)); } saveIncidents(merged,"reset"); apiQuiet("replaceAll",{incidents:merged}); audit("Reloaded example incidents"); toast("Example incidents reloaded."); renderShell(); };
+  function confirmRestore(d,label){
+    $("#restoreZone").innerHTML=`<div class="alert" style="margin-top:1rem"><b>Replace the current ${incidents().length} records with ${d.length} records from the ${esc(label)}?</b><span class="small">A snapshot of the current data is taken first.</span><div class="row"><button class="btn danger" id="rsYes">Restore</button><button class="btn" id="rsNo">Cancel</button></div></div>`;
+    $("#rsNo").onclick=()=>$("#restoreZone").innerHTML="";
+    $("#rsYes").onclick=()=>{ snap(); saveIncidents(d,"restore"); apiQuiet("replaceAll",{incidents:d}); audit("Restored data from "+label); toast("Data restored."); renderShell(); };
+  }
+}
+
+/* ---------- Near real-time updates ---------- */
+function checkForUpdates(){
+  if(!state.user) return;
+  const s=store.get("session",null);
+  if(!s||Date.now()-s.last>SESSION_TIMEOUT_MIN*6e4){ logout("timeout"); return; }
+  const d=incidents(); state.lastSync=new Date();
+  paintLive();
+  const role=state.user.role, msgs=[];
+  d.forEach(i=>{
+    const before=state.knownStatus.get(i.id);
+    if(before===undefined){ if(role!=="staff") msgs.push([`New ${i.severity} incident ${i.id}: ${typeName(i.typeId)} (${i.dept})`,i.severity==="critical"]); }
+    else if(before!==i.status){
+      if(role==="manager") msgs.push([`${i.id} is now ${i.status}.`,false]);
+      if(role==="staff"&&i.reporterId===state.user.empId) msgs.push([`Your report ${i.id} is now: ${i.status}.`,false]);
+    }
+  });
+  if(msgs.length||d.length!==state.knownStatus.size){
+    msgs.forEach(([m,c])=>toast(m,c));
+    const ae=document.activeElement, typing=ae&&/^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName);
+    if(!document.querySelector(".modal-back")&&!typing&&state.tab!=="report"&&state.tab!=="system") rerender(); else snapshotStatuses();
+  }
+}
+
+setInterval(checkForUpdates,POLL_MS);
+setInterval(()=>{ if(document.visibilityState==="visible") pullShared(); },SYNC_MS);
+document.addEventListener("visibilitychange",()=>{ if(document.visibilityState==="visible") pullShared(); });
+window.addEventListener("storage",e=>{ if(e.key==="lxsw:incidents") checkForUpdates(); });
+if(channel) channel.onmessage=()=>checkForUpdates();
+
+/* daily automatic snapshot when the IT admin is signed in */
+function autoSnap(){ if(state.user&&state.user.role==="admin"){ const b=store.get("backups",[]); if(!b.length||Date.now()-new Date(b[0].at)>864e5){ b.unshift({at:new Date().toISOString(),by:"Automatic",data:incidents()}); store.set("backups",b.slice(0,7)); } } }
+
+/* ---------- Boot ---------- */
+(function boot(){
+  incidents();
+  const s=store.get("session",null), u=s&&USERS.find(x=>x.username===s.username);
+  if(u&&Date.now()-s.last<SESSION_TIMEOUT_MIN*6e4){ state.user=u; state.tab=ROLE_TABS[u.role][0]; renderShell(); }
+  else renderLogin();
+  autoSnap();
+  pullShared();
+})();
+</script>
